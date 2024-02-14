@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import './Application.scss';
-import { icons } from './Icons';
+import { icons } from './icons';
 
-const Application: React.FC = () => {
+import './app.scss';
+
+const App: React.FC = () => {
     const [counter, setCounter] = useState(0);
     const [darkTheme, setDarkTheme] = useState(true);
 
@@ -126,4 +127,4 @@ const Application: React.FC = () => {
     );
 };
 
-export default Application;
+export default App;
