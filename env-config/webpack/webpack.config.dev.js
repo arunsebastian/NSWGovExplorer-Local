@@ -1,6 +1,6 @@
 module.exports = {
     mode: 'development',
-    entry: ['./src/main.tsx'],
+    entry: ['./src/index.tsx'],
     module: {
         rules: require('./webpack.rules')
     },
@@ -10,7 +10,7 @@ module.exports = {
     },
     plugins: require('./webpack.plugins'),
     resolve: {
-        extensions: ['.js', '.ts', '.jsx', '.tsx', '.css','.scss'],
+        extensions: ['.js', '.ts', '.jsx', '.tsx', '.css', '.scss'],
         alias: require('./webpack.aliases')
     },
     stats: 'errors-warnings',
