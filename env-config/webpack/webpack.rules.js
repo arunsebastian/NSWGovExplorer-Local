@@ -4,22 +4,22 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 module.exports = [
   {
     // Typescript loader
-    test: /\.tsx?$/,
-    exclude: /(node_modules|\.webpack)/,
-    use: {
-      loader: 'ts-loader',
-      options: {
-        transpileOnly: true,
-      },
-    },
+	test: /\.tsx?$/,
+	exclude: /(node_modules|\.webpack)/,
+	use: {
+		loader: 'ts-loader',
+		options: {
+			transpileOnly: true,
+		}
+	}
   },
   {
     // CSS Loader
     test: /\.css$/,
     use: [
       { loader: inDev() ? 'style-loader' : MiniCssExtractPlugin.loader },
-      { loader: 'css-loader' },
-    ],
+      { loader: 'css-loader' }
+    ]
   },
   {
     // SCSS (SASS) Loader
@@ -27,17 +27,8 @@ module.exports = [
     use: [
       { loader: inDev() ? 'style-loader' : MiniCssExtractPlugin.loader },
       { loader: 'css-loader' },
-      { loader: 'sass-loader' },
-    ],
-  },
-  {
-    // Less loader
-    test: /\.less$/,
-    use: [
-      { loader: inDev() ? 'style-loader' : MiniCssExtractPlugin.loader },
-      { loader: 'css-loader' },
-      { loader: 'less-loader' },
-    ],
+      { loader: 'sass-loader' }
+    ]
   },
   {
     // Assets loader
@@ -46,6 +37,6 @@ module.exports = [
     type: 'asset',
     generator: {
       filename: 'assets/[hash][ext][query]',
-    },
-  },
+    }
+  }
 ];

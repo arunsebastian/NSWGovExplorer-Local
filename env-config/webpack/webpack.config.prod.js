@@ -14,7 +14,7 @@ module.exports = {
 		extensions: ['.js', '.ts', '.jsx', '.tsx', '.css'],
 		alias: {
 			// Custom Aliases
-			...require('./webpack.aliases'),
+			...require('./webpack.aliases')
 		}
 	},
 	stats: 'errors-warnings',
@@ -31,7 +31,7 @@ module.exports = {
 				vendor: {
 					name: 'vendors',
 					test: /[\\/]node_modules[\\/]/,
-					chunks: 'all',
+					chunks: 'all'
 				}
 			}
 		}

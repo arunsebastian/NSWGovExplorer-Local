@@ -7,11 +7,11 @@ import webpack from '@assets/icons/webpack.png';
 import license from '@assets/icons/license.png';
 
 export const icons = {
-  chrome,
-  react,
-  typescript,
-  erwt,
-  nodejs,
-  webpack,
-  license,
+    chrome,
+    react,
+    typescript,
+    erwt,
+    nodejs,
+    webpack,
+    license
 };
