@@ -4,6 +4,7 @@ import './toolbar-group.scss';
 
 export type ToolbarGroupProps = {
     position?: 'top' | 'bottom' | 'left' | 'right';
+    children?: any;
 };
 
 enum CLASS {
@@ -16,7 +17,7 @@ enum CLASS {
 const ToolbarGroup: React.FC<ToolbarGroupProps> = (
     props: ToolbarGroupProps
 ) => {
-    const { position } = props;
+    const { position, children } = props;
     const [domClassName, setDomClassName] = useState<string>(
         CLASS.VERTICAL_LEFT
     );
@@ -37,7 +38,7 @@ const ToolbarGroup: React.FC<ToolbarGroupProps> = (
         });
     }, [position]);
 
-    return <div className={`toolbar-group ${domClassName}`}></div>;
+    return <div className={`toolbar-group ${domClassName}`}>{children}</div>;
 };
 
 export default ToolbarGroup;
