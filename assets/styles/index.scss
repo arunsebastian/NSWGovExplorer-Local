@@ -8,8 +8,9 @@ body {
 }
 body {
     margin: 0px;
-    border: solid red;
+    border: solid #ccc;
     box-sizing: border-box;
+    overflow: hidden;
     font-family: 'Public Sans', Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;

@@ -1,0 +1,7 @@
+.toolbar {
+    position: absolute;
+    border: 1px solid #ccc;
+    &.horizontal {
+        width: 100%;
+    }
+}

@@ -1,0 +1,28 @@
+.toolbar-group {
+    position: absolute;
+    border: 1px solid greenyellow;
+    display: flex;
+    box-sizing: border-box;
+    &.h-t {
+        width: 100%;
+        top: 0px;
+        height: 35px;
+    }
+    &.h-b {
+        width: 100%;
+        bottom: 0px;
+        height: 35px;
+    }
+    &.v-l {
+        left: 0px;
+        width: 35px;
+        height: 100%;
+        flex-direction: column;
+    }
+    &.v-r {
+        right: 0px;
+        width: 35px;
+        height: 100%;
+        flex-direction: column;
+    }
+}
