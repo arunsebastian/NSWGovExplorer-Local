@@ -3,8 +3,7 @@ import { createRoot } from 'react-dom/client';
 import App from './app/app';
 import { isMobile } from './utils/device';
 
-// Say something
-console.log('[Explorer] : Renderer execution started');
+console.log(process.env.NODE_ENV);
 
 // Application to Render
 const app = <App />;

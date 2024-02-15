@@ -10,12 +10,12 @@ module.exports = [
     inDev() && new webpack.HotModuleReplacementPlugin(),
     inDev() && new ReactRefreshWebpackPlugin(),
     new HtmlWebpackPlugin({
-      template: 'src/index.html',
-      favicon: 'assets/images/logo.png',
-      inject: true,
+        template: 'src/index.html',
+        favicon: 'assets/images/favicon.ico',
+        inject: true
     }),
     new MiniCssExtractPlugin({
-      filename: '[name].[chunkhash].css',
-      chunkFilename: '[name].[chunkhash].chunk.css',
+        filename: '[name].[chunkhash].css',
+        chunkFilename: '[name].[chunkhash].chunk.css'
     })
 ].filter(Boolean);
