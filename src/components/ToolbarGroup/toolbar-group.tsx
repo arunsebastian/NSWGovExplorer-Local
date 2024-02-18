@@ -17,7 +17,7 @@ enum CLASS {
 const ToolbarGroup: React.FC<ToolbarGroupProps> = (
     props: ToolbarGroupProps
 ) => {
-    const { position, children } = props;
+    const { position = 'bottom', children } = props;
     const [domClassName, setDomClassName] = useState<string>(
         CLASS.VERTICAL_LEFT
     );

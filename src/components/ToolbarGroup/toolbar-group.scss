@@ -3,26 +3,35 @@
     border: 1px solid greenyellow;
     display: flex;
     box-sizing: border-box;
+    z-index: 101;
+    background-color: #ccc;
+    align-items: center;
+    justify-content: space-around;
+
     &.h-t {
         width: 100%;
         top: 0px;
         height: 35px;
+        display: flex;
     }
     &.h-b {
         width: 100%;
         bottom: 0px;
         height: 35px;
+        display: flex;
     }
     &.v-l {
         left: 0px;
         width: 35px;
         height: 100%;
         flex-direction: column;
+        display: flex;
     }
     &.v-r {
         right: 0px;
         width: 35px;
         height: 100%;
         flex-direction: column;
+        display: flex;
     }
 }
