@@ -1,14 +1,25 @@
 import React from 'react';
-import ToolbarGroup from '../components/ToolbarGroup/toolbar-group';
+import { signal } from '@preact/signals-react';
+import ToolbarGroup from '../components/toolbar-group/toolbar-group';
+import Toolbar from '../components/toolbar/toolbar';
+import Navigation from '../components/widgets/navigation/navigation';
+import type MapView from '@arcgis/core/views/MapView';
+
 import './app.scss';
 
+const mapView = signal(undefined);
+
 const App: React.FC = () => {
+    const onMapLoaded = (view: MapView) => {
+        mapView.value = view;
+    };
+
     return (
         <div className='app-content'>
             <ToolbarGroup>
-                <div> GIS</div>
-                <div> GIS AI</div>
-                <div> GIS AI Tools</div>
+                <Toolbar>
+                    <Navigation view={mapView.value} />
+                </Toolbar>
             </ToolbarGroup>
         </div>
     );

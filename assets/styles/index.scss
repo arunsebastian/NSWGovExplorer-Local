@@ -1,6 +1,6 @@
 @import '~@arcgis/core/assets/esri/themes/light/main.css';
+@import '~@esri/calcite-components/dist/calcite/calcite.css';
 @import 'theme.scss';
-@import url('https://fonts.googleapis.com/css?family=Public Sans');
 
 html,
 body {
@@ -8,10 +8,9 @@ body {
 }
 body {
     margin: 0px;
-    border: solid #ccc;
     box-sizing: border-box;
     overflow: hidden;
-    font-family: 'Public Sans', Arial, sans-serif;
+    font-family: var(--app-font-family);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }

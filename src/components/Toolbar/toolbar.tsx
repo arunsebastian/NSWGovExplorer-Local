@@ -1,15 +1,13 @@
 import React from 'react';
-// import { icons } from './icons';
-
 import './toolbar.scss';
 
 export type ToolbarProps = {
     children?: any;
 };
-
+// onClick={(evt) => evt.stopImmediatePropagation();evt.preventDefault()}
 const Toolbar: React.FC<ToolbarProps> = (props: ToolbarProps) => {
-    console.log(props);
-    return <div className='toobar'></div>;
+    const { children } = props;
+    return <div className='toolbar'>{children}</div>;
 };
 
 export default Toolbar;

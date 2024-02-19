@@ -12,6 +12,8 @@
         "outDir": "dist",
         "moduleResolution": "node",
         "resolveJsonModule": true,
+        "typeRoots": ["node_modules/@types"],
+        "types": ["node"],
         "paths": {
             "*": ["node_modules/*"],
             "@assets/*": ["./assets/*"],
