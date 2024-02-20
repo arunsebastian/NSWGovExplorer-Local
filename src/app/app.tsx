@@ -4,29 +4,22 @@ import ToolbarGroup from '../components/toolbar-group/toolbar-group';
 import Toolbar from '../components/toolbar/toolbar';
 import Navigation from '../components/widgets/navigation/navigation';
 import AppMapView from '../components/widgets/map/app-map-view';
-import type MapView from '@arcgis/core/views/MapView';
+import { AppContextProvider } from '../contexts/app-context-provider';
 
 import './app.scss';
 
-const mapView = signal(undefined);
-
 const App: React.FC = () => {
-    //const [view, setView] = useState(undefined);
-    const handleMapAndLayersLoaded = (view: MapView) => {
-        console.log('Call back after view is rendered', view);
-        mapView.value = view;
-        // setView(view);
-    };
-
     return (
-        <div className='app-content'>
-            <AppMapView onMapAndLayersLoaded={handleMapAndLayersLoaded} />
-            <ToolbarGroup>
-                <Toolbar>
-                    <Navigation view={mapView.value} />
-                </Toolbar>
-            </ToolbarGroup>
-        </div>
+        <AppContextProvider>
+            <div className='app-content'>
+                <AppMapView />
+                <ToolbarGroup>
+                    <Toolbar>
+                        <Navigation />
+                    </Toolbar>
+                </ToolbarGroup>
+            </div>
+        </AppContextProvider>
     );
 };
 

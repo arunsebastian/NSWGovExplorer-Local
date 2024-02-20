@@ -2,17 +2,15 @@ import React, { useRef, useEffect } from 'react';
 import MapView from '@arcgis/core/views/MapView';
 import WebMap from '@arcgis/core/WebMap';
 import * as reactiveUtils from '@arcgis/core/core/reactiveUtils';
-import { getConfig } from '../../../utils/config';
+import { getConfig } from '@src/utils/config';
 import { waitForFeatureLayersLoad } from '../../../utils/map';
+import { useAppContext } from '@src/contexts/app-context-provider';
+
 import './app-map-view.scss';
 
-type AppMapViewProps = {
-    onMapAndLayersLoaded: (mapView: MapView) => void;
-};
-
-const AppMapView: React.FC<AppMapViewProps> = (props: AppMapViewProps) => {
+const AppMapView: React.FC = () => {
     const viewRef = useRef();
-    const { onMapAndLayersLoaded } = props;
+    const { mapView, setMapView } = useAppContext();
 
     const renderWebMap = () => {
         const config = getConfig().portalInfo;
@@ -26,15 +24,15 @@ const AppMapView: React.FC<AppMapViewProps> = (props: AppMapViewProps) => {
                 }
             });
             map.loadAll();
-            const mapView = new MapView({
+            const view = new MapView({
                 container: viewRef.current,
                 map: map
             });
             reactiveUtils
-                .whenOnce(() => mapView.ready)
+                .whenOnce(() => view.ready)
                 .then(async () => {
-                    await waitForFeatureLayersLoad(mapView);
-                    onMapAndLayersLoaded && onMapAndLayersLoaded(mapView);
+                    await waitForFeatureLayersLoad(view);
+                    setMapView(view);
                 });
         }
     };

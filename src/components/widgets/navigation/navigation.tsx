@@ -1,25 +1,22 @@
 import React, { useRef } from 'react';
-import type MapView from '@arcgis/core/views/MapView';
 import { effect } from '@preact/signals-react';
+import { useAppContext } from '@src/contexts/app-context-provider';
 import './navigation.scss';
 
-export type NavigationProps = {
-    view?: MapView;
-};
 import { CalciteButton } from '@esri/calcite-components-react';
-const Toolbar: React.FC<NavigationProps> = (props: NavigationProps) => {
-    const { view } = props;
+const Toolbar: React.FC = () => {
+    const { mapView, setMapView } = useAppContext();
+
     const navRef = useRef<HTMLCalciteButtonElement>();
 
     effect(() => {
-        console.log(view);
-        if (view) {
+        if (mapView) {
             navRef.current?.removeAttribute('disabled');
         }
     });
 
     const displayNavigationTools = () => {
-        console.log(view);
+        console.log(mapView);
     };
 
     return (

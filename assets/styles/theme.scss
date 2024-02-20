@@ -3,11 +3,10 @@
 :root {
     --app-font-family: 'Public Sans', Arial, sans-serif;
 
-    // Button
-    --button-bgcolor: #c6c6c6;
-    --button-hover-bgcolor: #b4b4b4;
-    --button-active-bgcolor: #9b9c9c;
-    --button-shadow-color: #00000078;
-    --button-border: 1px solid #b4b4b4;
-    --button-text-color: #7e7e7e;
+    // Tool background
+    --app-tool-bg: linear-gradient(0deg, #dadada, #dadada),
+        linear-gradient(0deg, #f1f1f1, #f1f1f1);
+
+    // Popover buttons
+    --app-popover-button-text-color: #6a6a6a;
 }
