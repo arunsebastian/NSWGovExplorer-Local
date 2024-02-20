@@ -2,15 +2,15 @@ import React, { useRef } from 'react';
 import { effect, signal } from '@preact/signals-react';
 import { useAppContext } from '@src/contexts/app-context-provider';
 
-import Rotate from '../rotate/rotate';
-import Pan from '../pan/pan';
-import ZoomIn from '../zoom-in/zoom-in';
-import ZoomOut from '../zoom-out/zoom-out';
-import Home from '../home/home';
-import Previous from '../previous/previous';
-import Next from '../next/next';
-import Locate from '../locate/locate';
-import NorthArrow from '../north-arrow/north-arrow';
+import Rotate from './_widgets/rotate/rotate';
+import Pan from './_widgets/pan/pan';
+import ZoomIn from './_widgets/zoom-in/zoom-in';
+import ZoomOut from './_widgets/zoom-out/zoom-out';
+import Home from './_widgets/home/home';
+import Previous from './_widgets/previous/previous';
+import Next from './_widgets/next/next';
+import Locate from './_widgets/locate/locate';
+import NorthArrow from './_widgets/north-arrow/north-arrow';
 
 import strings from './strings';
 import './navigation.scss';
@@ -59,10 +59,6 @@ const Navigation: React.FC = () => {
                     <Next view={mapView} />
                     <Locate view={mapView} />
                     <NorthArrow view={mapView} />
-
-                    {/* <CalciteAction text='Save' icon='save'></CalciteAction>
-                    <CalciteAction text='Undo' icon='undo'></CalciteAction>
-                    <CalciteAction text='Redo' icon='redo'></CalciteAction> */}
                 </CalciteActionBar>
             </CalcitePopover>
             <CalciteButton
