@@ -7,6 +7,10 @@ import Pan from '../pan/pan';
 import ZoomIn from '../zoom-in/zoom-in';
 import ZoomOut from '../zoom-out/zoom-out';
 import Home from '../home/home';
+import Previous from '../previous/previous';
+import Next from '../next/next';
+import Locate from '../locate/locate';
+import NorthArrow from '../north-arrow/north-arrow';
 
 import strings from './strings';
 import './navigation.scss';
@@ -51,6 +55,11 @@ const Navigation: React.FC = () => {
                     <ZoomIn view={mapView} />
                     <ZoomOut view={mapView} />
                     <Home view={mapView} />
+                    <Previous view={mapView} />
+                    <Next view={mapView} />
+                    <Locate view={mapView} />
+                    <NorthArrow view={mapView} />
+
                     {/* <CalciteAction text='Save' icon='save'></CalciteAction>
                     <CalciteAction text='Undo' icon='undo'></CalciteAction>
                     <CalciteAction text='Redo' icon='redo'></CalciteAction> */}
