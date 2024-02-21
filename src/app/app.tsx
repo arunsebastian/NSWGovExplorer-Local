@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { signal } from '@preact/signals-react';
+import React from 'react';
 import ToolbarGroup from '../components/toolbar-group/toolbar-group';
 import Toolbar from '../components/toolbar/toolbar';
 import Navigation from '../components/widgets/navigation/navigation';

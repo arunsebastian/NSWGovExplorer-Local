@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { effect, signal } from '@preact/signals-react';
+import { effect } from '@preact/signals-react';
 import { useAppContext } from '@src/contexts/app-context-provider';
 
 import Rotate from './_widgets/rotate/rotate';
@@ -13,6 +13,7 @@ import Locate from './_widgets/locate/locate';
 import NorthArrow from './_widgets/north-arrow/north-arrow';
 
 import strings from './strings';
+import styles from './dynamic-styles';
 import './navigation.scss';
 
 import {
@@ -21,26 +22,34 @@ import {
     CalciteActionBar
 } from '@esri/calcite-components-react';
 
-const isDisplaying = signal(false);
-
 const Navigation: React.FC = () => {
-    const { mapView, setMapView } = useAppContext();
+    const { mapView } = useAppContext();
 
     const navRef = useRef<HTMLCalciteButtonElement>();
     const popOverRef = useRef<HTMLCalcitePopoverElement>();
 
-    effect(() => {
-        mapView ? navRef.current?.removeAttribute('disabled') : null;
-        if (popOverRef.current) {
-            popOverRef.current.open = isDisplaying.value;
-        }
-    });
-
     const toggleNavigationTools = () => {
-        if (!popOverRef.current.open) {
-            isDisplaying.value = !isDisplaying.value;
+        popOverRef.current.open = !popOverRef.current.open;
+    };
+
+    const applyCustomStyles = () => {
+        const node = navRef.current;
+        const shadowRoot = node.shadowRoot;
+        if (shadowRoot) {
+            const sheet = new CSSStyleSheet();
+            sheet.replaceSync(styles.contentButton);
+            const elemStyleSheets = node.shadowRoot.adoptedStyleSheets;
+            // Append your style to the existing style sheet.
+            shadowRoot.adoptedStyleSheets = [...elemStyleSheets, sheet];
         }
     };
+
+    effect(() => {
+        if (mapView && navRef.current) {
+            navRef.current.removeAttribute('disabled');
+            applyCustomStyles();
+        }
+    });
 
     return (
         <>
