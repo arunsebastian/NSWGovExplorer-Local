@@ -8,10 +8,10 @@ export type ToolbarGroupProps = {
 };
 
 enum CLASS {
-    HORIZONTAL_TOP = 'h-t',
-    HORIZONTAL_BOTTOM = 'h-b',
-    VERTICAL_LEFT = 'v-l',
-    VERTICAL_RIGHT = 'v-r'
+    HORIZONTAL_TOP = 'h-top',
+    HORIZONTAL_BOTTOM = 'h-bottom',
+    VERTICAL_LEFT = 'v-left',
+    VERTICAL_RIGHT = 'v-right'
 }
 
 const domClass = signal(CLASS.VERTICAL_LEFT);

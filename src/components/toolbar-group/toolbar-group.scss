@@ -3,35 +3,32 @@
     display: flex;
     box-sizing: border-box;
     z-index: 101;
-    align-items: center;
-    justify-content: space-around;
-
-    &.h-t {
-        width: 100%;
+    &.h-top {
         top: 0px;
-        height: 35px;
-        display: flex;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 0px 10px;
         flex-direction: row;
+        align-items: center;
+        justify-content: space-around;
     }
-    &.h-b {
-        width: 100%;
+    &.h-bottom {
         bottom: 0px;
-        height: 35px;
-        display: flex;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 0px 10px;
         flex-direction: row;
+        align-items: center;
+        justify-content: space-around;
     }
-    &.v-l {
+    &.v-left {
         left: 0px;
-        width: 35px;
-        height: 100%;
         flex-direction: column;
-        display: flex;
+        padding: 20px 0px 20px 10px;
     }
-    &.v-r {
+    &.v-right {
         right: 0px;
-        width: 35px;
-        height: 100%;
         flex-direction: column;
-        display: flex;
+        padding: 20px 10px 20px 0px;
     }
 }

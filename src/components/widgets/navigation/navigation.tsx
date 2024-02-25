@@ -29,7 +29,9 @@ const Navigation: React.FC = () => {
     const popOverRef = useRef<HTMLCalcitePopoverElement>();
 
     const toggleNavigationTools = () => {
-        popOverRef.current.open = !popOverRef.current.open;
+        if (mapView) {
+            popOverRef.current.open = !popOverRef.current.open;
+        }
     };
 
     const applyCustomStyles = () => {
