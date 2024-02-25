@@ -30,7 +30,10 @@ const AppMapView: React.FC = () => {
             map.loadAll();
             const view = new MapView({
                 container: viewRef.current,
-                map: map
+                map: map,
+                ui: {
+                    components: ['attribution']
+                }
             });
             reactiveUtils
                 .whenOnce(() => view.ready)
