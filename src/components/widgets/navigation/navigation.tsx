@@ -6,8 +6,7 @@ import Rotate from './_widgets/rotate/rotate';
 import Pan from './_widgets/pan/pan';
 import Zoom from './_widgets/zoom/zoom';
 import Home from './_widgets/home/home';
-import Previous from './_widgets/previous/previous';
-import Next from './_widgets/next/next';
+import PreviousNext from './_widgets/previous-next/previous-next';
 import Locate from './_widgets/locate/locate';
 import NorthArrow from './_widgets/north-arrow/north-arrow';
 
@@ -64,8 +63,7 @@ const Navigation: React.FC = () => {
                     <Pan view={mapView} />
                     <Zoom view={mapView} />
                     <Home view={mapView} />
-                    <Previous view={mapView} />
-                    <Next view={mapView} />
+                    <PreviousNext view={mapView} />
                     <Locate view={mapView} />
                     <NorthArrow view={mapView} />
                 </CalciteActionBar>
