@@ -13,14 +13,24 @@ import { waitForFeatureLayersLoad } from '../../utils/map';
 import { useAppContext } from '@src/contexts/app-context-provider';
 
 import './app-view.scss';
+enum RENDER_MODE {
+    MAPVIEW = '2d',
+    SCENEVIEW = '3d'
+}
 
-const AppView: React.FC = () => {
+type AppProps = {
+    type?: string;
+};
+
+const AppView: React.FC<AppProps> = ({
+    type = RENDER_MODE.MAPVIEW
+}: AppProps) => {
     const viewRef = useRef();
     const { setMapView, setSceneView } = useAppContext();
     const isSceneView = false; // temporary
 
-    const MapType = isSceneView ? WebScene : WebMap;
-    const ViewType = isSceneView ? SceneView : MapView;
+    const MapType = type === RENDER_MODE.SCENEVIEW ? WebScene : WebMap;
+    const ViewType = RENDER_MODE.SCENEVIEW ? SceneView : MapView;
 
     const renderMap = () => {
         const config = getConfig().portalInfo;
