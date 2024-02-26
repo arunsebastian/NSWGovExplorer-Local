@@ -4,9 +4,11 @@ import './north-arrow.scss';
 
 import { CalciteAction } from '@esri/calcite-components-react';
 import type MapView from '@arcgis/core/views/MapView';
+import type SceneView from '@arcgis/core/views/SceneView';
 import northArrow from '@assets/images/north-arrow.svg';
+
 type NorthArrowProps = {
-    view: MapView;
+    view: MapView | SceneView;
 };
 const NorthArrow: React.FC<NorthArrowProps> = (props: NorthArrowProps) => {
     const { view } = props;

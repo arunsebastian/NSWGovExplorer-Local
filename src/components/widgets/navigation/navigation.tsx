@@ -20,8 +20,13 @@ import {
     CalciteActionBar
 } from '@esri/calcite-components-react';
 
-const Navigation: React.FC = () => {
-    const { mapView } = useAppContext();
+type NavigationProps = {
+    isSceneView?: boolean;
+};
+const Navigation: React.FC<NavigationProps> = ({
+    isSceneView = false
+}: NavigationProps) => {
+    const { mapView, sceneView } = useAppContext();
 
     const navRef = useRef<HTMLCalciteButtonElement>();
     const popOverRef = useRef<HTMLCalcitePopoverElement>();
@@ -59,13 +64,13 @@ const Navigation: React.FC = () => {
                 referenceElement='nav-trigger'
             >
                 <CalciteActionBar layout='horizontal'>
-                    <Rotate view={mapView} />
-                    <Pan view={mapView} />
-                    <Zoom view={mapView} />
-                    <Home view={mapView} />
-                    <PreviousNext view={mapView} />
-                    <Locate view={mapView} />
-                    <NorthArrow view={mapView} />
+                    {isSceneView && <Rotate view={sceneView} />}
+                    <Pan view={isSceneView ? sceneView : mapView} />
+                    <Zoom view={isSceneView ? sceneView : mapView} />
+                    <Home view={isSceneView ? sceneView : mapView} />
+                    <PreviousNext view={isSceneView ? sceneView : mapView} />
+                    <Locate view={isSceneView ? sceneView : mapView} />
+                    <NorthArrow view={isSceneView ? sceneView : mapView} />
                 </CalciteActionBar>
             </CalcitePopover>
             <CalciteButton

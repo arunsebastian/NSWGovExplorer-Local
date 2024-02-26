@@ -8,8 +8,6 @@ interface AppContextProps {
     setMapView: (view: MapView) => void;
     sceneView: SceneView;
     setSceneView: (view: SceneView) => void;
-    activeMapTool: string;
-    setActiveMapTool: (tool: string) => void;
 }
 
 type AppContextProviderProps = {
@@ -23,7 +21,6 @@ export function AppContextProvider(props: AppContextProviderProps) {
     const [loading, setLoading] = useState<boolean>(false);
     const [mapView, setMapView] = useState<MapView>();
     const [sceneView, setSceneView] = useState<SceneView>();
-    const [activeMapTool, setActiveMapTool] = useState<string>();
 
     const context = {
         loading,
@@ -31,9 +28,7 @@ export function AppContextProvider(props: AppContextProviderProps) {
         mapView,
         setMapView,
         sceneView,
-        setSceneView,
-        activeMapTool,
-        setActiveMapTool
+        setSceneView
     };
 
     return (

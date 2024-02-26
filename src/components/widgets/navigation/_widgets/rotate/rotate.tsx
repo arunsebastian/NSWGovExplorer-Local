@@ -3,10 +3,10 @@ import strings from './strings';
 import './rotate.scss';
 
 import { CalciteAction } from '@esri/calcite-components-react';
-import type MapView from '@arcgis/core/views/MapView';
+import type SceneView from '@arcgis/core/views/SceneView';
 import rotate from '@assets/images/rotate.svg';
 type RotateProps = {
-    view: MapView;
+    view: SceneView;
 };
 const Rotate: React.FC<RotateProps> = (props: RotateProps) => {
     const { view } = props;

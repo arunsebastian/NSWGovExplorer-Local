@@ -4,6 +4,7 @@ import './zoom.scss';
 
 import { CalciteAction } from '@esri/calcite-components-react';
 import type MapView from '@arcgis/core/views/MapView';
+import type SceneView from '@arcgis/core/views/SceneView';
 import ZoomVM from '@arcgis/core/widgets/Zoom/ZoomViewModel';
 import * as reactiveUtils from '@arcgis/core/core/reactiveUtils';
 
@@ -11,7 +12,7 @@ import zoomIn from '@assets/images/zoom-in.svg';
 import zoomOut from '@assets/images/zoom-out.svg';
 
 type ZoomProps = {
-    view: MapView;
+    view: MapView | SceneView;
 };
 
 const Zoom: React.FC<ZoomProps> = (props: ZoomProps) => {

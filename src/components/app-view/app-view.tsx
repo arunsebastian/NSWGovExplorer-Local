@@ -1,25 +1,31 @@
 import React, { useRef, useEffect } from 'react';
 import MapView from '@arcgis/core/views/MapView';
+import SceneView from '@arcgis/core/views/SceneView';
 import WebMap from '@arcgis/core/WebMap';
-import ToolbarGroup from '../../toolbar-group/toolbar-group';
-import Toolbar from '../../toolbar/toolbar';
-import Navigation from '../../widgets/navigation/navigation';
-import Search from '../../widgets/search/search';
+import WebScene from '@arcgis/core/WebScene';
+import ToolbarGroup from '../toolbar-group/toolbar-group';
+import Toolbar from '../toolbar/toolbar';
+import Navigation from '../widgets/navigation/navigation';
+import Search from '../widgets/search/search';
 import * as reactiveUtils from '@arcgis/core/core/reactiveUtils';
 import { getConfig } from '@src/utils/config';
-import { waitForFeatureLayersLoad } from '../../../utils/map';
+import { waitForFeatureLayersLoad } from '../../utils/map';
 import { useAppContext } from '@src/contexts/app-context-provider';
 
-import './app-map-view.scss';
+import './app-view.scss';
 
-const AppMapView: React.FC = () => {
+const AppView: React.FC = () => {
     const viewRef = useRef();
-    const { setMapView } = useAppContext();
+    const { setMapView, setSceneView } = useAppContext();
+    const isSceneView = false; // temporary
 
-    const renderWebMap = () => {
+    const MapType = isSceneView ? WebScene : WebMap;
+    const ViewType = isSceneView ? SceneView : MapView;
+
+    const renderMap = () => {
         const config = getConfig().portalInfo;
         if (config.itemId) {
-            const map = new WebMap({
+            const map = new MapType({
                 portalItem: {
                     id: config.itemId,
                     portal: {
@@ -28,7 +34,7 @@ const AppMapView: React.FC = () => {
                 }
             });
             map.loadAll();
-            const view = new MapView({
+            const view = new ViewType({
                 container: viewRef.current,
                 map: map,
                 ui: {
@@ -39,21 +45,23 @@ const AppMapView: React.FC = () => {
                 .whenOnce(() => view.ready)
                 .then(async () => {
                     await waitForFeatureLayersLoad(view);
-                    setMapView(view);
+                    isSceneView
+                        ? setSceneView(view as SceneView)
+                        : setMapView(view as MapView);
                 });
         }
     };
     useEffect(() => {
         if (viewRef.current) {
-            renderWebMap();
+            renderMap();
         }
     }, [viewRef.current]);
 
     return (
-        <div className='app-map-view-content'>
+        <div className='app-view-content'>
             <ToolbarGroup position='bottom'>
                 <Toolbar>
-                    <Navigation />
+                    <Navigation isSceneView={isSceneView} />
                 </Toolbar>
             </ToolbarGroup>
             <ToolbarGroup position='right'>
@@ -61,9 +69,9 @@ const AppMapView: React.FC = () => {
                     <Search />
                 </Toolbar>
             </ToolbarGroup>
-            <div ref={viewRef} className='app-map-view'></div>
+            <div ref={viewRef} className='app-view'></div>
         </div>
     );
 };
 
-export default AppMapView;
+export default AppView;

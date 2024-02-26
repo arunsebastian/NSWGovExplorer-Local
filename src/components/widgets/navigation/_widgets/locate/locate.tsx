@@ -4,9 +4,10 @@ import './locate.scss';
 
 import { CalciteAction } from '@esri/calcite-components-react';
 import type MapView from '@arcgis/core/views/MapView';
+import type SceneView from '@arcgis/core/views/SceneView';
 import locate from '@assets/images/locate.svg';
 type LocateProps = {
-    view: MapView;
+    view: MapView | SceneView;
 };
 const Locate: React.FC<LocateProps> = (props: LocateProps) => {
     const { view } = props;

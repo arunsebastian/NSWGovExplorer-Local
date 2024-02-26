@@ -1,6 +1,6 @@
 import React from 'react';
 
-import AppMapView from '../components/widgets/map/app-map-view';
+import AppView from '../components/app-view/app-view';
 import { AppContextProvider } from '../contexts/app-context-provider';
 
 import './app.scss';
@@ -8,7 +8,7 @@ import './app.scss';
 const App: React.FC = () => {
     return (
         <AppContextProvider>
-            <AppMapView></AppMapView>
+            <AppView></AppView>
         </AppContextProvider>
     );
 };

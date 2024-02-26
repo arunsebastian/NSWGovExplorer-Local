@@ -4,9 +4,11 @@ import './home.scss';
 
 import { CalciteAction } from '@esri/calcite-components-react';
 import type MapView from '@arcgis/core/views/MapView';
+import type SceneView from '@arcgis/core/views/SceneView';
+
 import home from '@assets/images/home.svg';
 type HomeProps = {
-    view: MapView;
+    view: MapView | SceneView;
 };
 const Home: React.FC<HomeProps> = (props: HomeProps) => {
     const { view } = props;

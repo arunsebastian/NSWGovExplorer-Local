@@ -4,12 +4,13 @@ import './previous-next.scss';
 
 import { CalciteAction } from '@esri/calcite-components-react';
 import type MapView from '@arcgis/core/views/MapView';
+import type SceneView from '@arcgis/core/views/SceneView';
 import * as reactiveUtils from '@arcgis/core/core/reactiveUtils';
 import next from '@assets/images/next.svg';
 import previous from '@assets/images/previous.svg';
 
 type PreviousNextProps = {
-    view: MapView;
+    view: MapView | SceneView;
 };
 
 const PreviousNext: React.FC<PreviousNextProps> = (
@@ -28,7 +29,6 @@ const PreviousNext: React.FC<PreviousNextProps> = (
     });
     const handleNextClicked = () => {
         const currentState = { ...previousNextConfig.current };
-        console.log('Current State', currentState);
         currentState.isNextExtent = true;
         currentState.extentHistoryIndx = currentState.extentHistoryIndx + 1;
         if (
@@ -81,6 +81,10 @@ const PreviousNext: React.FC<PreviousNextProps> = (
         const currentState = previousNextConfig.current;
         const extentHistory = currentState.extentHistory;
         const extentHistoryIdx = currentState.extentHistoryIndx;
+
+        console.log('ExtentHistory', extentHistory);
+        console.log('extentHistoryIdx', extentHistoryIdx);
+
         if (extentHistory.length === 0 || extentHistoryIdx === 0) {
             prevRef.current.setAttribute('disabled', 'true');
         } else {
@@ -94,7 +98,6 @@ const PreviousNext: React.FC<PreviousNextProps> = (
         } else {
             nextRef.current.removeAttribute('disabled');
         }
-        console.log('State >>>>', currentState);
     };
 
     useEffect(() => {

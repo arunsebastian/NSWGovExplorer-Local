@@ -4,9 +4,11 @@ import './pan.scss';
 
 import { CalciteAction } from '@esri/calcite-components-react';
 import type MapView from '@arcgis/core/views/MapView';
+import type SceneView from '@arcgis/core/views/SceneView';
+
 import pan from '@assets/images/pan.svg';
 type PanProps = {
-    view: MapView;
+    view: MapView | SceneView;
 };
 const Pan: React.FC<PanProps> = (props: PanProps) => {
     const { view } = props;

@@ -14,7 +14,9 @@ const _waitLoad = async (layer: __esri.FeatureLayer) => {
             });
     });
 };
-export const waitForFeatureLayersLoad = (view: __esri.MapView) => {
+export const waitForFeatureLayersLoad = (
+    view: __esri.MapView | __esri.SceneView
+) => {
     const featureLayers = view.map.allLayers
         .filter((layer: __esri.Layer) => {
             return layer.type === 'feature';
