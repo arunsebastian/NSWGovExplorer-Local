@@ -4,8 +4,7 @@ import { useAppContext } from '@src/contexts/app-context-provider';
 
 import Rotate from './_widgets/rotate/rotate';
 import Pan from './_widgets/pan/pan';
-import ZoomIn from './_widgets/zoom-in/zoom-in';
-import ZoomOut from './_widgets/zoom-out/zoom-out';
+import Zoom from './_widgets/zoom/zoom';
 import Home from './_widgets/home/home';
 import Previous from './_widgets/previous/previous';
 import Next from './_widgets/next/next';
@@ -63,8 +62,7 @@ const Navigation: React.FC = () => {
                 <CalciteActionBar layout='horizontal'>
                     <Rotate view={mapView} />
                     <Pan view={mapView} />
-                    <ZoomIn view={mapView} />
-                    <ZoomOut view={mapView} />
+                    <Zoom view={mapView} />
                     <Home view={mapView} />
                     <Previous view={mapView} />
                     <Next view={mapView} />

@@ -3,7 +3,7 @@ const devEnv = 'https://beta.portal.spatial.nsw.gov.au';
 const testEnv = 'https://alpha.portal.spatial.nsw.gov.au';
 //const prodEnv = 'https://portal.spatial.nsw.gov.au';
 
-const startUpItemIdDev = 'df2c4ca520134b7491f826bc526b335c';
+const startUpItemIdDev = '2995f4cb2581421f8172f988c18ff4c2'; //'df2c4ca520134b7491f826bc526b335c';
 //const startUpItemIdTest = '';
 
 type PortalInfo = { url: string; itemId: string };
