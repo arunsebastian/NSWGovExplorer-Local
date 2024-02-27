@@ -2,8 +2,7 @@ import React, { useRef } from 'react';
 import { effect } from '@preact/signals-react';
 import { useAppContext } from '@src/contexts/app-context-provider';
 
-import Rotate from './_widgets/rotate/rotate';
-import Pan from './_widgets/pan/pan';
+import PanRotate from './_widgets/pan-rotate/pan-rotate';
 import Zoom from './_widgets/zoom/zoom';
 import Home from './_widgets/home/home';
 import PreviousNext from './_widgets/previous-next/previous-next';
@@ -64,8 +63,7 @@ const Navigation: React.FC<NavigationProps> = ({
                 referenceElement='nav-trigger'
             >
                 <CalciteActionBar layout='horizontal' expandDisabled={true}>
-                    {isSceneView && <Rotate view={sceneView} />}
-                    <Pan view={isSceneView ? sceneView : mapView} />
+                    <PanRotate view={isSceneView ? sceneView : mapView} />
                     <Zoom view={isSceneView ? sceneView : mapView} />
                     <Home view={isSceneView ? sceneView : mapView} />
                     <PreviousNext view={isSceneView ? sceneView : mapView} />

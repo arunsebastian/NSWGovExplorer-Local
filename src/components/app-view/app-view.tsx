@@ -3,6 +3,8 @@ import MapView from '@arcgis/core/views/MapView';
 import SceneView from '@arcgis/core/views/SceneView';
 import WebMap from '@arcgis/core/WebMap';
 import WebScene from '@arcgis/core/WebScene';
+import NavigationToggle from '@arcgis/core/widgets/NavigationToggle';
+
 import ToolbarGroup from '../toolbar-group/toolbar-group';
 import Toolbar from '../toolbar/toolbar';
 import Navigation from '../widgets/navigation/navigation';
@@ -27,10 +29,9 @@ const AppView: React.FC<AppProps> = ({
 }: AppProps) => {
     const viewRef = useRef();
     const { setMapView, setSceneView } = useAppContext();
-    const isSceneView = false; // temporary
 
     const MapType = type === RENDER_MODE.SCENEVIEW ? WebScene : WebMap;
-    const ViewType = RENDER_MODE.SCENEVIEW ? SceneView : MapView;
+    const ViewType = type === RENDER_MODE.SCENEVIEW ? SceneView : MapView;
 
     const renderMap = () => {
         const config = getConfig().portalInfo;
@@ -55,7 +56,16 @@ const AppView: React.FC<AppProps> = ({
                 .whenOnce(() => view.ready)
                 .then(async () => {
                     await waitForFeatureLayersLoad(view);
-                    isSceneView
+
+                    const navigationToggle = new NavigationToggle({
+                        //@ts-ignore
+                        view: view
+                    });
+
+                    // and adds it to the top right of the view
+                    view.ui.add(navigationToggle, 'top-left');
+
+                    type === RENDER_MODE.SCENEVIEW
                         ? setSceneView(view as SceneView)
                         : setMapView(view as MapView);
                 });
@@ -71,7 +81,7 @@ const AppView: React.FC<AppProps> = ({
         <div className='app-view-content'>
             <ToolbarGroup position='bottom'>
                 <Toolbar>
-                    <Navigation isSceneView={isSceneView} />
+                    <Navigation isSceneView={type === RENDER_MODE.SCENEVIEW} />
                 </Toolbar>
             </ToolbarGroup>
             <ToolbarGroup position='right'>
