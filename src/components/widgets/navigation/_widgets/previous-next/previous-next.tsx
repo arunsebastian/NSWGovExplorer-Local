@@ -4,6 +4,7 @@ import { CalciteAction } from '@esri/calcite-components-react';
 import type MapView from '@arcgis/core/views/MapView';
 import type SceneView from '@arcgis/core/views/SceneView';
 import * as reactiveUtils from '@arcgis/core/core/reactiveUtils';
+import * as geometryEngine from '@arcgis/core/geometry/geometryEngine';
 
 import strings from './strings';
 import './previous-next.scss';
@@ -68,6 +69,9 @@ const PreviousNext: React.FC<PreviousNextProps> = (
 
     const handleExtentChanges = () => {
         const currentState = { ...previousNextConfig.current };
+        if (geometryEngine.equals(currentState.currentExtent, view.extent)) {
+            return;
+        }
         if (currentState.isPrevExtent || currentState.isNextExtent) {
             currentState.currentExtent = view.extent;
         } else {
