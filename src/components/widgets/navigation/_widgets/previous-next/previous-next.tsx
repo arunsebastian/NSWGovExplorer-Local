@@ -1,11 +1,12 @@
 import React, { useRef, useEffect } from 'react';
-import strings from './strings';
-import './previous-next.scss';
 
 import { CalciteAction } from '@esri/calcite-components-react';
 import type MapView from '@arcgis/core/views/MapView';
 import type SceneView from '@arcgis/core/views/SceneView';
 import * as reactiveUtils from '@arcgis/core/core/reactiveUtils';
+
+import strings from './strings';
+import './previous-next.scss';
 import next from '@assets/images/next.svg';
 import previous from '@assets/images/previous.svg';
 
@@ -25,8 +26,15 @@ const PreviousNext: React.FC<PreviousNextProps> = (
         prevExtent: null,
         currentExtent: null,
         extentHistory: [],
-        extentHistoryIndx: 0
+        extentHistoryIndx: -1
     });
+
+    const storeInitialExtent = () => {
+        const currentState = { ...previousNextConfig.current };
+        currentState.currentExtent = view.extent;
+        previousNextConfig.current = currentState;
+    };
+
     const handleNextClicked = () => {
         const currentState = { ...previousNextConfig.current };
         currentState.isNextExtent = true;
@@ -82,10 +90,7 @@ const PreviousNext: React.FC<PreviousNextProps> = (
         const extentHistory = currentState.extentHistory;
         const extentHistoryIdx = currentState.extentHistoryIndx;
 
-        console.log('ExtentHistory', extentHistory);
-        console.log('extentHistoryIdx', extentHistoryIdx);
-
-        if (extentHistory.length === 0 || extentHistoryIdx === 0) {
+        if (extentHistory.length === 0 || extentHistoryIdx === -1) {
             prevRef.current.setAttribute('disabled', 'true');
         } else {
             prevRef.current.removeAttribute('disabled');
@@ -102,12 +107,15 @@ const PreviousNext: React.FC<PreviousNextProps> = (
 
     useEffect(() => {
         if (view) {
-            reactiveUtils.when(
-                () => view.stationary === true,
-                () => {
-                    handleExtentChanges();
-                }
-            );
+            view.when(() => {
+                storeInitialExtent();
+                reactiveUtils.when(
+                    () => view.stationary === true,
+                    () => {
+                        handleExtentChanges();
+                    }
+                );
+            });
         }
     }, [view]);
 

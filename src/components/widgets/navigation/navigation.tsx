@@ -63,7 +63,7 @@ const Navigation: React.FC<NavigationProps> = ({
                 ref={popOverRef}
                 referenceElement='nav-trigger'
             >
-                <CalciteActionBar layout='horizontal'>
+                <CalciteActionBar layout='horizontal' expandDisabled={true}>
                     {isSceneView && <Rotate view={sceneView} />}
                     <Pan view={isSceneView ? sceneView : mapView} />
                     <Zoom view={isSceneView ? sceneView : mapView} />
