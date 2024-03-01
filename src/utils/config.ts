@@ -1,30 +1,37 @@
 const enforceDev = true;
-const devEnv = 'https://beta.portal.spatial.nsw.gov.au';
-const testEnv = 'https://alpha.portal.spatial.nsw.gov.au';
-//const prodEnv = 'https://portal.spatial.nsw.gov.au';
+const ENV = {
+    DEV: 'development',
+    PROD: 'production',
+    TEST: 'test'
+};
 
-const startUpItemIdDev = '2995f4cb2581421f8172f988c18ff4c2'; //'df2c4ca520134b7491f826bc526b335c';
-//const startUpItemIdTest = '';
+const Config = {
+    [ENV.DEV]: {
+        url: 'https://beta.portal.spatial.nsw.gov.au/portal',
+        mapId: '2995f4cb2581421f8172f988c18ff4c2',
+        sceneId: '49fde993776b4efeb1a791539b1f782b'
+    },
+    [ENV.TEST]: {
+        url: 'https://alpha.portal.spatial.nsw.gov.au/portal',
+        mapId: '',
+        sceneId: ''
+    },
+    [ENV.PROD]: {
+        url: 'https://portal.spatial.nsw.gov.au/portal',
+        mapId: '',
+        sceneId: ''
+    }
+};
 
-type PortalInfo = { url: string; itemId: string };
+type PortalInfo = { url: string; mapId: string; sceneId: string };
 
 export type Config = {
     portalInfo: PortalInfo;
 };
 
-export const getConfig = (): Config => {
-    const env = process.env.NODE_ENV;
-    const isDev = enforceDev ? true : env === 'development';
-    let url = `${devEnv}/portal`;
-    let itemId = startUpItemIdDev;
-    if (!isDev) {
-        url = `${testEnv}/portal`;
-        itemId = startUpItemIdDev;
-    }
+export const getConfig = (env?: string): Config => {
+    env = env ?? process.env.NODE_ENV;
     return {
-        portalInfo: {
-            url: url,
-            itemId: itemId
-        }
+        portalInfo: enforceDev ? Config[ENV.DEV] : Config[env]
     };
 };

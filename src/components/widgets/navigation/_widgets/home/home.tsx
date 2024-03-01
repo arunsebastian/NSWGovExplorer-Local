@@ -11,14 +11,10 @@ import home from '@assets/images/home.svg';
 type HomeProps = {
     view: MapView | SceneView;
 };
+const homeVM = new HomeVM();
 
 const Home: React.FC<HomeProps> = (props: HomeProps) => {
     const { view } = props;
-    const homeVM = useRef(
-        new HomeVM({
-            view: view
-        })
-    ).current;
 
     const handleHomeClicked = () => {
         homeVM.go();

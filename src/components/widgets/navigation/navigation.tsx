@@ -31,7 +31,7 @@ const Navigation: React.FC<NavigationProps> = ({
     const popOverRef = useRef<HTMLCalcitePopoverElement>();
 
     const toggleNavigationTools = () => {
-        if (mapView) {
+        if (isSceneView ? sceneView : mapView) {
             popOverRef.current.open = !popOverRef.current.open;
         }
     };
@@ -49,7 +49,7 @@ const Navigation: React.FC<NavigationProps> = ({
     };
 
     effect(() => {
-        if (mapView && navRef.current) {
+        if ((isSceneView ? sceneView : mapView) && navRef.current) {
             navRef.current.removeAttribute('disabled');
             applyCustomStyles();
         }

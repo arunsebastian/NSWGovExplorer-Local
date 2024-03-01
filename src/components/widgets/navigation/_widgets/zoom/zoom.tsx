@@ -14,15 +14,12 @@ type ZoomProps = {
     view: MapView | SceneView;
 };
 
+const zoomVM = new ZoomVM();
+
 const Zoom: React.FC<ZoomProps> = (props: ZoomProps) => {
     const { view } = props;
     const zoomInRef = useRef<HTMLCalciteActionElement>();
     const zoomOutRef = useRef<HTMLCalciteActionElement>();
-    const zoomVM = useRef(
-        new ZoomVM({
-            view: view
-        })
-    ).current;
 
     const handleZoomInClicked = () => {
         if (zoomVM.canZoomIn) {

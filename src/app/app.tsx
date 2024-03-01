@@ -8,7 +8,7 @@ import './app.scss';
 const App: React.FC = () => {
     return (
         <AppContextProvider>
-            <AppView></AppView>
+            <AppView type='2d'></AppView>
         </AppContextProvider>
     );
 };
