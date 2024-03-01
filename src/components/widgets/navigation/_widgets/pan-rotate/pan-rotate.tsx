@@ -51,7 +51,7 @@ const PanRotate: React.FC<PanRotateProps> = (props: PanRotateProps) => {
     };
 
     const rotateMapView = (event: __esri.ViewDragEvent) => {
-        const center = { x: event.x, y: event.y };
+        const center = { center: { x: event.x, y: event.y } };
         if (event.action === 'start') {
             (view as any).mapViewNavigation.rotate.begin(view, center);
             event.stopPropagation();
