@@ -1,5 +1,4 @@
-import React, { useRef } from 'react';
-import { effect } from '@preact/signals-react';
+import React, { useEffect, useRef } from 'react';
 import { useAppContext } from '@src/contexts/app-context-provider';
 import search from '@assets/images/zoom-in.svg';
 
@@ -10,7 +9,7 @@ import './search.scss';
 import { CalciteAction, CalciteInput } from '@esri/calcite-components-react';
 
 const Search: React.FC = () => {
-    const { mapView } = useAppContext();
+    const { mapView, sceneView } = useAppContext();
     const searchRef = useRef<HTMLCalciteActionElement>();
 
     const handleSearchClicked = () => {};
@@ -27,12 +26,12 @@ const Search: React.FC = () => {
         }
     };
 
-    effect(() => {
+    useEffect(() => {
         if (mapView && searchRef.current) {
             //searchRef.current.removeAttribute('disabled');
             applyCustomStyles();
         }
-    });
+    }, [(mapView || sceneView) && searchRef.current]);
 
     return (
         // I AM HERE::::::

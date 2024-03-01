@@ -1,5 +1,4 @@
-import React, { useRef } from 'react';
-import { effect } from '@preact/signals-react';
+import React, { useRef, useEffect } from 'react';
 import { useAppContext } from '@src/contexts/app-context-provider';
 
 import PanRotate from './_widgets/pan-rotate/pan-rotate';
@@ -47,12 +46,14 @@ const Navigation: React.FC<NavigationProps> = ({
         }
     };
 
-    effect(() => {
+    useEffect(() => {
         if ((isSceneView ? sceneView : mapView) && navRef.current) {
             navRef.current.removeAttribute('disabled');
             applyCustomStyles();
+        } else {
+            navRef.current.setAttribute('disabled', 'true');
         }
-    });
+    }, [isSceneView ? sceneView : mapView, navRef.current]);
 
     return (
         <>
@@ -71,7 +72,6 @@ const Navigation: React.FC<NavigationProps> = ({
                 </CalciteActionBar>
             </CalcitePopover>
             <CalciteButton
-                disabled
                 id='nav-trigger'
                 title={strings.navigation}
                 label={strings.navigation}

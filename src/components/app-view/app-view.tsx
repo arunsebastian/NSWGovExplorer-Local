@@ -79,11 +79,11 @@ const AppView: React.FC<AppProps> = ({ type = MODE.MAP_VIEW }: AppProps) => {
                     <Navigation isSceneView={type === MODE.SCENE_VIEW} />
                 </Toolbar>
             </ToolbarGroup>
-            <ToolbarGroup position='right'>
+            {/* <ToolbarGroup position='right'>
                 <Toolbar>
                     <Search />
                 </Toolbar>
-            </ToolbarGroup>
+            </ToolbarGroup> */}
             <div ref={viewRef} className='app-view'>
                 {/* share mapview /sceneview */}
             </div>
