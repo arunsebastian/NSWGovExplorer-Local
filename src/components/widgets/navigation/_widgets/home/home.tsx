@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { CalciteAction } from '@esri/calcite-components-react';
 import type MapView from '@arcgis/core/views/MapView';
 import type SceneView from '@arcgis/core/views/SceneView';
