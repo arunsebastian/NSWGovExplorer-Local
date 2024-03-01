@@ -84,7 +84,9 @@ const AppView: React.FC<AppProps> = ({ type = MODE.MAP_VIEW }: AppProps) => {
                     <Search />
                 </Toolbar>
             </ToolbarGroup>
-            <div ref={viewRef} className='app-view'></div>
+            <div ref={viewRef} className='app-view'>
+                {/* share mapview /sceneview */}
+            </div>
         </div>
     );
 };

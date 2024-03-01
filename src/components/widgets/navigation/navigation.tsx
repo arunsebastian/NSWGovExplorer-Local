@@ -7,7 +7,7 @@ import Zoom from './_widgets/zoom/zoom';
 import Home from './_widgets/home/home';
 import PreviousNext from './_widgets/previous-next/previous-next';
 import Locate from './_widgets/locate/locate';
-import NorthArrow from './_widgets/north-arrow/north-arrow';
+import NorthArrow from './_widgets/compass/compass';
 
 import strings from './strings';
 import styles from './dynamic-styles';
@@ -26,7 +26,6 @@ const Navigation: React.FC<NavigationProps> = ({
     isSceneView = false
 }: NavigationProps) => {
     const { mapView, sceneView } = useAppContext();
-
     const navRef = useRef<HTMLCalciteButtonElement>();
     const popOverRef = useRef<HTMLCalcitePopoverElement>();
 

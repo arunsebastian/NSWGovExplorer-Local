@@ -11,6 +11,7 @@ import home from '@assets/images/home.svg';
 type HomeProps = {
     view: MapView | SceneView;
 };
+
 const homeVM = new HomeVM();
 
 const Home: React.FC<HomeProps> = (props: HomeProps) => {
