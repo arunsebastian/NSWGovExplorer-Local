@@ -1,5 +1,4 @@
-import React from 'react';
-import { effect, signal } from '@preact/signals-react';
+import React, { useEffect, useRef } from 'react';
 import './toolbar-group.scss';
 
 export type ToolbarGroupProps = {
@@ -14,26 +13,27 @@ enum CLASS {
     VERTICAL_RIGHT = 'v-right'
 }
 
-const domClass = signal(CLASS.VERTICAL_LEFT);
-
 const ToolbarGroup: React.FC<ToolbarGroupProps> = (
     props: ToolbarGroupProps
 ) => {
     const { position = 'bottom', children } = props;
+    const domClassRef = useRef<string>(CLASS.HORIZONTAL_BOTTOM);
 
-    effect(() => {
+    useEffect(() => {
         if (position === 'top') {
-            domClass.value = CLASS.HORIZONTAL_TOP;
+            domClassRef.current = CLASS.HORIZONTAL_TOP;
         } else if (position === 'right') {
-            domClass.value = CLASS.VERTICAL_RIGHT;
+            domClassRef.current = CLASS.VERTICAL_RIGHT;
         } else if (position === 'left') {
-            domClass.value = CLASS.VERTICAL_LEFT;
+            domClassRef.current = CLASS.VERTICAL_LEFT;
         } else {
-            domClass.value = CLASS.HORIZONTAL_BOTTOM;
+            domClassRef.current = CLASS.HORIZONTAL_BOTTOM;
         }
-    });
+    }, [position]);
 
-    return <div className={`toolbar-group ${domClass.value}`}>{children}</div>;
+    return (
+        <div className={`toolbar-group ${domClassRef.current}`}>{children}</div>
+    );
 };
 
 export default ToolbarGroup;
