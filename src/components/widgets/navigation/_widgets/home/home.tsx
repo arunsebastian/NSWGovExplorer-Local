@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { CalciteAction } from '@esri/calcite-components-react';
 import type MapView from '@arcgis/core/views/MapView';
 import type SceneView from '@arcgis/core/views/SceneView';
@@ -12,10 +12,9 @@ type HomeProps = {
     view: MapView | SceneView;
 };
 
-const homeVM = new HomeVM();
-
 const Home: React.FC<HomeProps> = (props: HomeProps) => {
     const { view } = props;
+    const homeVM = useRef<HomeVM>(new HomeVM()).current;
 
     const handleHomeClicked = () => {
         homeVM.go();
@@ -29,6 +28,7 @@ const Home: React.FC<HomeProps> = (props: HomeProps) => {
 
     return (
         <CalciteAction
+            scale='s'
             className='nav-home'
             title={strings.home}
             label={strings.home}

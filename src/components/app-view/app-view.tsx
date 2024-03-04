@@ -10,18 +10,14 @@ import * as reactiveUtils from '@arcgis/core/core/reactiveUtils';
 import ToolbarGroup from '../toolbar-group/toolbar-group';
 import Toolbar from '../toolbar/toolbar';
 import Navigation from '../widgets/navigation/navigation';
-import Search from '../widgets/search/search';
+import { MODE } from '@src/utils/constants';
+// import Search from '../widgets/search/search';
 
 import { getConfig } from '@src/utils/config';
 import { waitForFeatureLayersLoad } from '../../utils/map';
 import { useAppContext } from '@src/contexts/app-context-provider';
 
 import './app-view.scss';
-
-enum MODE {
-    MAP_VIEW = '2d',
-    SCENE_VIEW = '3d'
-}
 
 type AppProps = {
     type?: string;
@@ -76,7 +72,7 @@ const AppView: React.FC<AppProps> = ({ type = MODE.MAP_VIEW }: AppProps) => {
         <div className='app-view-content'>
             <ToolbarGroup position='bottom'>
                 <Toolbar>
-                    <Navigation isSceneView={type === MODE.SCENE_VIEW} />
+                    <Navigation context={type} />
                 </Toolbar>
             </ToolbarGroup>
             {/* <ToolbarGroup position='right'>
@@ -84,9 +80,7 @@ const AppView: React.FC<AppProps> = ({ type = MODE.MAP_VIEW }: AppProps) => {
                     <Search />
                 </Toolbar>
             </ToolbarGroup> */}
-            <div ref={viewRef} className='app-view'>
-                {/* share mapview /sceneview */}
-            </div>
+            <div ref={viewRef} className='app-view'></div>
         </div>
     );
 };

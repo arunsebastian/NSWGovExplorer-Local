@@ -13,11 +13,10 @@ type CompassProps = {
     view: MapView | SceneView;
 };
 
-const compassVM = new CompassVM();
-
 const Compass: React.FC<CompassProps> = (props: CompassProps) => {
     const { view } = props;
     const [rotation, setRotation] = useState<number>(0);
+    const compassVM = useRef<CompassVM>(new CompassVM()).current;
     const compassRef = useRef<HTMLCalciteIconElement>();
 
     const handleCompassClicked = () => {
@@ -50,6 +49,7 @@ const Compass: React.FC<CompassProps> = (props: CompassProps) => {
 
     return (
         <CalciteAction
+            scale='s'
             className='nav-compass'
             title={strings.compass}
             label={strings.compass}

@@ -128,6 +128,7 @@ const PreviousNext: React.FC<PreviousNextProps> = (
             <CalciteAction
                 disabled
                 ref={prevRef}
+                scale='s'
                 className='nav-previous'
                 title={strings.previous}
                 label={strings.previous}
@@ -138,6 +139,7 @@ const PreviousNext: React.FC<PreviousNextProps> = (
             </CalciteAction>
             <CalciteAction
                 disabled
+                scale='s'
                 ref={nextRef}
                 className='nav-next'
                 title={strings.next}

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import { CalciteAction } from '@esri/calcite-components-react';
 import type MapView from '@arcgis/core/views/MapView';
@@ -13,11 +13,9 @@ type LocateProps = {
     view: MapView | SceneView;
 };
 
-const locateVM = new LocateVM();
-
 const Locate: React.FC<LocateProps> = (props: LocateProps) => {
     const { view } = props;
-
+    const locateVM = useRef<LocateVM>(new LocateVM()).current;
     const handleLocateClicked = () => {
         locateVM.locate();
     };
@@ -30,6 +28,7 @@ const Locate: React.FC<LocateProps> = (props: LocateProps) => {
 
     return (
         <CalciteAction
+            scale='s'
             className='nav-locate'
             title={strings.locate}
             label={strings.locate}

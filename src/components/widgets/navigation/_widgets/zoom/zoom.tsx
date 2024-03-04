@@ -14,10 +14,9 @@ type ZoomProps = {
     view: MapView | SceneView;
 };
 
-const zoomVM = new ZoomVM();
-
 const Zoom: React.FC<ZoomProps> = (props: ZoomProps) => {
     const { view } = props;
+    const zoomVM = useRef<ZoomVM>(new ZoomVM()).current;
     const zoomInRef = useRef<HTMLCalciteActionElement>();
     const zoomOutRef = useRef<HTMLCalciteActionElement>();
 
@@ -84,6 +83,7 @@ const Zoom: React.FC<ZoomProps> = (props: ZoomProps) => {
     return (
         <>
             <CalciteAction
+                scale='s'
                 className='nav-zoom-in'
                 ref={zoomInRef}
                 title={strings.zoomIn}
@@ -94,6 +94,7 @@ const Zoom: React.FC<ZoomProps> = (props: ZoomProps) => {
                 <img src={zoomIn}></img>
             </CalciteAction>
             <CalciteAction
+                scale='s'
                 className='nav-zoom-out'
                 ref={zoomOutRef}
                 title={strings.zoomOut}

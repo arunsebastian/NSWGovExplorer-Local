@@ -7,6 +7,7 @@ import Home from './_widgets/home/home';
 import PreviousNext from './_widgets/previous-next/previous-next';
 import Locate from './_widgets/locate/locate';
 import NorthArrow from './_widgets/compass/compass';
+import { MODE } from '@src/utils/constants';
 
 import strings from './strings';
 import styles from './dynamic-styles';
@@ -19,17 +20,18 @@ import {
 } from '@esri/calcite-components-react';
 
 type NavigationProps = {
-    isSceneView?: boolean;
+    context?: string;
 };
+
 const Navigation: React.FC<NavigationProps> = ({
-    isSceneView = false
+    context = MODE.MAP_VIEW
 }: NavigationProps) => {
     const { mapView, sceneView } = useAppContext();
     const navRef = useRef<HTMLCalciteButtonElement>();
     const popOverRef = useRef<HTMLCalcitePopoverElement>();
 
     const toggleNavigationTools = () => {
-        if (isSceneView ? sceneView : mapView) {
+        if (context === MODE.SCENE_VIEW ? sceneView : mapView) {
             popOverRef.current.open = !popOverRef.current.open;
         }
     };
@@ -47,32 +49,51 @@ const Navigation: React.FC<NavigationProps> = ({
     };
 
     useEffect(() => {
-        if ((isSceneView ? sceneView : mapView) && navRef.current) {
+        if (
+            (context === MODE.SCENE_VIEW ? sceneView : mapView) &&
+            navRef.current
+        ) {
             navRef.current.removeAttribute('disabled');
             applyCustomStyles();
         } else {
             navRef.current.setAttribute('disabled', 'true');
         }
-    }, [isSceneView ? sceneView : mapView, navRef.current]);
+    }, [context === MODE.SCENE_VIEW ? sceneView : mapView, navRef.current]);
 
     return (
         <>
             <CalcitePopover
                 label={strings.navigationToolbar}
                 ref={popOverRef}
-                referenceElement='nav-trigger'
+                referenceElement={`nav-trigger-${context}`}
             >
-                <CalciteActionBar layout='horizontal' expandDisabled={true}>
-                    <PanRotate view={isSceneView ? sceneView : mapView} />
-                    <Zoom view={isSceneView ? sceneView : mapView} />
-                    <Home view={isSceneView ? sceneView : mapView} />
-                    <PreviousNext view={isSceneView ? sceneView : mapView} />
-                    <Locate view={isSceneView ? sceneView : mapView} />
-                    <NorthArrow view={isSceneView ? sceneView : mapView} />
+                <CalciteActionBar
+                    layout='horizontal'
+                    className='nav-bar'
+                    expandDisabled={true}
+                >
+                    <PanRotate
+                        view={context === MODE.SCENE_VIEW ? sceneView : mapView}
+                    />
+                    <Zoom
+                        view={context === MODE.SCENE_VIEW ? sceneView : mapView}
+                    />
+                    <Home
+                        view={context === MODE.SCENE_VIEW ? sceneView : mapView}
+                    />
+                    <PreviousNext
+                        view={context === MODE.SCENE_VIEW ? sceneView : mapView}
+                    />
+                    <Locate
+                        view={context === MODE.SCENE_VIEW ? sceneView : mapView}
+                    />
+                    <NorthArrow
+                        view={context === MODE.SCENE_VIEW ? sceneView : mapView}
+                    />
                 </CalciteActionBar>
             </CalcitePopover>
             <CalciteButton
-                id='nav-trigger'
+                id={`nav-trigger-${context}`}
                 title={strings.navigation}
                 label={strings.navigation}
                 ref={navRef}

@@ -14,11 +14,12 @@ type PanRotateProps = {
     view: MapView | SceneView;
 };
 
-const navToggleVM = new NavigationToggleVM();
-
 const PanRotate: React.FC<PanRotateProps> = (props: PanRotateProps) => {
     const { view } = props;
     const rotateHandler = useRef();
+    const navToggleVM = useRef<NavigationToggleVM>(
+        new NavigationToggleVM()
+    ).current;
 
     const handlePanClicked = () => {
         if (view.declaredClass.toLowerCase().includes('mapview')) {
@@ -73,6 +74,7 @@ const PanRotate: React.FC<PanRotateProps> = (props: PanRotateProps) => {
     return (
         <>
             <CalciteAction
+                scale='s'
                 className='nav-pan'
                 title={strings.pan}
                 label={strings.pan}
@@ -82,6 +84,7 @@ const PanRotate: React.FC<PanRotateProps> = (props: PanRotateProps) => {
                 <img src={pan}></img>
             </CalciteAction>
             <CalciteAction
+                scale='s'
                 className='nav-rotate'
                 title={strings.rotate}
                 label={strings.rotate}
