@@ -5,6 +5,7 @@ import type MapView from '@arcgis/core/views/MapView';
 import type SceneView from '@arcgis/core/views/SceneView';
 import CompassVM from '@arcgis/core/widgets/Compass/CompassViewModel';
 import * as reactiveUtils from '@arcgis/core/core/reactiveUtils';
+import { MODE } from '@src/utils/constants';
 
 import strings from './strings';
 import './compass.scss';
@@ -26,12 +27,21 @@ const Compass: React.FC<CompassProps> = (props: CompassProps) => {
     useEffect(() => {
         if (view) {
             compassVM.set('view', view);
-            reactiveUtils.watch(
-                () => (view as MapView).rotation,
-                (rotation: number) => {
-                    setRotation(rotation);
-                }
-            );
+            if (view.type === MODE.MAP_VIEW) {
+                reactiveUtils.watch(
+                    () => (view as MapView).rotation,
+                    (rotation: number) => {
+                        setRotation(rotation);
+                    }
+                );
+            } else {
+                reactiveUtils.watch(
+                    () => (view as SceneView).camera.heading,
+                    (heading: number) => {
+                        setRotation(360 - heading);
+                    }
+                );
+            }
         }
     }, [view]);
 

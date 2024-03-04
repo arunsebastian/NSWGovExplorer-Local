@@ -1,12 +1,13 @@
 import React, { useEffect, useRef } from 'react';
-import strings from './strings';
-import './pan-rotate.scss';
 
 import { CalciteAction } from '@esri/calcite-components-react';
 import type MapView from '@arcgis/core/views/MapView';
 import type SceneView from '@arcgis/core/views/SceneView';
 import NavigationToggleVM from '@arcgis/core/widgets/NavigationToggle/NavigationToggleViewModel';
+import { MODE } from '@src/utils/constants';
 
+import strings from './strings';
+import './pan-rotate.scss';
 import pan from '@assets/images/pan.svg';
 import rotate from '@assets/images/rotate.svg';
 
@@ -22,7 +23,7 @@ const PanRotate: React.FC<PanRotateProps> = (props: PanRotateProps) => {
     ).current;
 
     const handlePanClicked = () => {
-        if (view.declaredClass.toLowerCase().includes('mapview')) {
+        if (view.type === MODE.MAP_VIEW) {
             if (rotateHandler.current) {
                 (rotateHandler.current as any).remove();
                 rotateHandler.current = null;
@@ -33,7 +34,7 @@ const PanRotate: React.FC<PanRotateProps> = (props: PanRotateProps) => {
     };
 
     const handleRotateClicked = () => {
-        if (view.declaredClass.toLowerCase().includes('mapview')) {
+        if (view.type === MODE.MAP_VIEW) {
             if (rotateHandler.current) {
                 (rotateHandler.current as any).remove();
                 rotateHandler.current = null;
