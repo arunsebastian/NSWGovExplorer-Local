@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import { CalciteAction, CalciteIcon } from '@esri/calcite-components-react';
 import type MapView from '@arcgis/core/views/MapView';
@@ -16,7 +16,6 @@ type CompassProps = {
 
 const Compass: React.FC<CompassProps> = (props: CompassProps) => {
     const { view } = props;
-    const [rotation, setRotation] = useState<number>(0);
     const compassVM = useRef<CompassVM>(new CompassVM()).current;
     const compassRef = useRef<HTMLCalciteIconElement>();
 
@@ -24,28 +23,7 @@ const Compass: React.FC<CompassProps> = (props: CompassProps) => {
         compassVM.reset();
     };
 
-    useEffect(() => {
-        if (view) {
-            compassVM.set('view', view);
-            if (view.type === MODE.MAP_VIEW) {
-                reactiveUtils.watch(
-                    () => (view as MapView).rotation,
-                    (rotation: number) => {
-                        setRotation(rotation);
-                    }
-                );
-            } else {
-                reactiveUtils.watch(
-                    () => (view as SceneView).camera.heading,
-                    (heading: number) => {
-                        setRotation(360 - heading);
-                    }
-                );
-            }
-        }
-    }, [view]);
-
-    useEffect(() => {
+    const updateCompass = (rotation: number) => {
         if (typeof rotation === 'number' && compassRef.current) {
             const needle = compassRef.current.shadowRoot.querySelector('svg');
             if (needle) {
@@ -55,7 +33,22 @@ const Compass: React.FC<CompassProps> = (props: CompassProps) => {
                 );
             }
         }
-    }, [rotation, compassRef.current]);
+    };
+
+    useEffect(() => {
+        if (view) {
+            compassVM.set('view', view);
+            reactiveUtils.watch(
+                () =>
+                    (view as SceneView).camera?.heading ??
+                    (view as MapView).rotation,
+                (rotation) =>
+                    updateCompass(
+                        view.type === MODE.MAP_VIEW ? rotation : 360 - rotation
+                    )
+            );
+        }
+    }, [view]);
 
     return (
         <CalciteAction

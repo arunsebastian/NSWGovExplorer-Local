@@ -29,7 +29,10 @@ const PanRotate: React.FC<PanRotateProps> = (props: PanRotateProps) => {
                 rotateHandler.current = null;
             }
         } else {
-            navToggleVM.set('navigationMode', 'pan');
+
+            if (navToggleVM.navigationMode !== 'pan') {
+                navToggleVM.toggle();
+            }
         }
     };
 
@@ -48,7 +51,10 @@ const PanRotate: React.FC<PanRotateProps> = (props: PanRotateProps) => {
                 );
             }
         } else {
-            navToggleVM.set('navigationMode', 'rotate');
+
+            if (navToggleVM.navigationMode !== 'rotate') {
+                navToggleVM.toggle();
+            }
         }
     };
 
