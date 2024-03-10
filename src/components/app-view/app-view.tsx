@@ -5,13 +5,10 @@ import WebMap from '@arcgis/core/WebMap';
 import WebScene from '@arcgis/core/WebScene';
 import * as reactiveUtils from '@arcgis/core/core/reactiveUtils';
 
-// import NavigationToggle from '@arcgis/core/widgets/NavigationToggle';
-
 import ToolbarGroup from '../toolbar-group/toolbar-group';
 import Toolbar from '../toolbar/toolbar';
 import Navigation from '../widgets/navigation/navigation';
 import { MODE } from '@src/utils/constants';
-// import Search from '../widgets/search/search';
 
 import { getConfig } from '@src/utils/config';
 import { waitForFeatureLayersLoad } from '../../utils/map';
@@ -29,6 +26,7 @@ const AppView: React.FC<AppProps> = ({ type = MODE.MAP_VIEW }: AppProps) => {
 
     const MapType = type === MODE.SCENE_VIEW ? WebScene : WebMap;
     const ViewType = type === MODE.SCENE_VIEW ? SceneView : MapView;
+    const SetViewFunc = type === MODE.SCENE_VIEW ? setSceneView : setMapView;
 
     const renderMap = () => {
         const config = getConfig().portalInfo;
@@ -56,9 +54,7 @@ const AppView: React.FC<AppProps> = ({ type = MODE.MAP_VIEW }: AppProps) => {
                 .whenOnce(() => view.ready)
                 .then(async () => {
                     await waitForFeatureLayersLoad(view);
-                    type === MODE.SCENE_VIEW
-                        ? setSceneView(view as SceneView)
-                        : setMapView(view as MapView);
+                    SetViewFunc(view as any);
                 });
         }
     };
