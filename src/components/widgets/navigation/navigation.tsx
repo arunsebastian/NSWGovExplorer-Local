@@ -7,6 +7,7 @@ import Home from './_widgets/home/home';
 import PreviousNext from './_widgets/previous-next/previous-next';
 import Locate from './_widgets/locate/locate';
 import NorthArrow from './_widgets/compass/compass';
+import SwitchView from './_widgets/switch-view/switch-view';
 import { MODE } from '@src/utils/constants';
 
 import strings from './strings';
@@ -65,6 +66,7 @@ const Navigation: React.FC<NavigationProps> = ({
             <CalcitePopover
                 label={strings.navigationToolbar}
                 ref={popOverRef}
+                open={false}
                 placement='top'
                 referenceElement={`nav-trigger-${context}`}
             >
@@ -73,6 +75,9 @@ const Navigation: React.FC<NavigationProps> = ({
                     className='nav-bar'
                     expandDisabled={true}
                 >
+                    <SwitchView
+                        view={context === MODE.SCENE_VIEW ? sceneView : mapView}
+                    />
                     <PanRotate
                         view={context === MODE.SCENE_VIEW ? sceneView : mapView}
                     />

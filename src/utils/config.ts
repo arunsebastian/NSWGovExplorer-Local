@@ -1,9 +1,6 @@
-const enforceDev = true;
-const ENV = {
-    DEV: 'development',
-    PROD: 'production',
-    TEST: 'test'
-};
+import { ENV } from './constants';
+
+const enforceDev = false;
 
 const Config = {
     [ENV.DEV]: {
@@ -20,6 +17,11 @@ const Config = {
         url: 'https://portal.spatial.nsw.gov.au/portal',
         mapId: '',
         sceneId: ''
+    },
+    [ENV.AGOL]: {
+        url: 'https://arunsebastian.maps.arcgis.com',
+        mapId: '26ada7d3df0641a1ae3d39f211973329',
+        sceneId: 'c618ba9c82b0472eb13c37b186e22f62'
     }
 };
 

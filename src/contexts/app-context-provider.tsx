@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useState } from 'react';
 import type MapView from '@arcgis/core/views/MapView';
 import type SceneView from '@arcgis/core/views/SceneView';
+import { MODE } from '@src/utils/constants';
+
 interface AppContextProps {
     loading: boolean;
     setLoading: (active: boolean) => void;
@@ -8,6 +10,8 @@ interface AppContextProps {
     setMapView: (view: MapView) => void;
     sceneView: SceneView;
     setSceneView: (view: SceneView) => void;
+    activeView: string;
+    setActiveView: (type: string) => void;
 }
 
 type AppContextProviderProps = {
@@ -21,6 +25,7 @@ export function AppContextProvider(props: AppContextProviderProps) {
     const [loading, setLoading] = useState<boolean>(false);
     const [mapView, setMapView] = useState<MapView>();
     const [sceneView, setSceneView] = useState<SceneView>();
+    const [activeView, setActiveView] = useState<string>(MODE.MAP_VIEW);
 
     const context = {
         loading,
@@ -28,7 +33,9 @@ export function AppContextProvider(props: AppContextProviderProps) {
         mapView,
         setMapView,
         sceneView,
-        setSceneView
+        setSceneView,
+        activeView,
+        setActiveView
     };
 
     return (
