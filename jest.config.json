@@ -4,12 +4,15 @@
         "^.+\\.(js|jsx|ts|tsx)?$": [
             "ts-jest",
             { "diagnostics": { "warnOnly": true, "isolatedModules": true } }
-        ]
+        ],
+        "^.+\\.svg$": "jest-transform-stub"
     },
     "testRegex": "\\.(test|spec)\\.(ts|tsx?)$",
     "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json"],
     "moduleNameMapper": {
-        ".+\\.(css|scss)$": "identity-obj-proxy"
+        ".+\\.(css|scss)$": "identity-obj-proxy",
+        "^@src(.*)$": "<rootDir>/src$1",
+        "^@assets(.*)$": "<rootDir>/assets$1"
     },
     "transformIgnorePatterns": [
         "node_modules/(?!(@arcgis|@esri|@stencil|@popperjs)/)"

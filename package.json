@@ -8,7 +8,8 @@
         "build": "cross-env NODE_ENV=production webpack --config env-config/webpack/webpack.config.prod.js",
         "serve": "cross-env NODE_ENV=production webpack --config env-config/webpack/webpack.config.prod.js && cross-env serve dist/",
         "lint": "eslint --ext .js,.jsx,.ts,.tsx src/",
-        "test": "jest --config jest.config.json --watchAll --coverage"
+        "test": "jest --config jest.config.json --watchAll",
+        "test:full": "jest --config jest.config.json --watchAll --coverage"
     },
     "devDependencies": {
         "@marshallofsound/webpack-asset-relocator-loader": "^0.5.0",
@@ -39,6 +40,7 @@
         "jest": "^29.7.0",
         "jest-canvas-mock": "^2.5.2",
         "jest-environment-jsdom": "^29.7.0",
+        "jest-transform-stub": "^2.0.0",
         "mini-css-extract-plugin": "^2.8.0",
         "react-refresh": "^0.14.0",
         "sass": "^1.70.0",
