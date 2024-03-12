@@ -4,7 +4,6 @@ import SceneView from '@arcgis/core/views/SceneView';
 import WebMap from '@arcgis/core/WebMap';
 import WebScene from '@arcgis/core/WebScene';
 import * as reactiveUtils from '@arcgis/core/core/reactiveUtils';
-import * as geometryEngine from '@arcgis/core/geometry/geometryEngine';
 import classNames from 'classnames';
 
 import ToolbarGroup from '../toolbar-group/toolbar-group';
@@ -12,8 +11,8 @@ import Toolbar from '../toolbar/toolbar';
 import Navigation from '../widgets/navigation/navigation';
 import { ENV, MODE } from '@src/utils/constants';
 
-import { getConfig } from '@src/utils/config';
-import { waitForFeatureLayersLoad } from '../../utils/map';
+import { getConfig } from '@src/config/config';
+import { waitForFeatureLayersLoad } from '@src/utils/map';
 import { useAppContext } from '@src/contexts/app-context-provider';
 
 import './app-view.scss';
@@ -60,12 +59,12 @@ const AppView: React.FC<AppProps> = ({ type = MODE.MAP_VIEW }: AppProps) => {
                     // Disable zoom snapping to get the best synchronization
                     snapToZoom: MODE.SCENE_VIEW ? true : false
                 }
-            });
+            }) as any;
             reactiveUtils
                 .whenOnce(() => view.ready)
                 .then(async () => {
                     await waitForFeatureLayersLoad(view);
-                    SetViewFunc(view as any);
+                    SetViewFunc(view);
                 });
         }
     };
