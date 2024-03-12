@@ -64,7 +64,7 @@ const Navigation: React.FC<NavigationProps> = ({
     return (
         <>
             <CalcitePopover
-                label={strings.navigationToolbar}
+                label={strings.navigation}
                 ref={popOverRef}
                 open={false}
                 placement='top'

@@ -1,18 +1,19 @@
-.app-view-content {
+.map-view-container {
     flex: 1;
     min-width: 50%;
     height: 100%;
     position: relative;
     padding: 2px;
+    box-sizing: border-box;
     &.inactive {
         display: none;
     }
     &.active {
         display: initial;
     }
-    .app-view {
+    .map-view {
+        position: absolute;
         width: 100%;
         height: 100%;
-        box-sizing: border-box;
     }
 }

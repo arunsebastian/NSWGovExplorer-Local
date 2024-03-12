@@ -1,13 +1,12 @@
 import React, { useRef, useEffect } from 'react';
-import MapView from '@arcgis/core/views/MapView';
-import SceneView from '@arcgis/core/views/SceneView';
+import { default as View2D } from '@arcgis/core/views/MapView';
+import { default as View3D } from '@arcgis/core/views/SceneView';
 import WebMap from '@arcgis/core/WebMap';
 import WebScene from '@arcgis/core/WebScene';
 import * as reactiveUtils from '@arcgis/core/core/reactiveUtils';
 import classNames from 'classnames';
 
-import ToolbarGroup from '../toolbar-group/toolbar-group';
-import Toolbar from '../toolbar/toolbar';
+import MapToolbar from '../map-toolbar/map-toolbar';
 import Navigation from '../widgets/navigation/navigation';
 import { ENV, MODE } from '@src/utils/constants';
 
@@ -15,22 +14,24 @@ import { getConfig } from '@src/config/config';
 import { waitForFeatureLayersLoad } from '@src/utils/map';
 import { useAppContext } from '@src/contexts/app-context-provider';
 
-import './app-view.scss';
+import './map-view.scss';
 
-type AppProps = {
+type MapViewProps = {
     type?: string;
 };
 
-const AppView: React.FC<AppProps> = ({ type = MODE.MAP_VIEW }: AppProps) => {
+const MapView: React.FC<MapViewProps> = ({
+    type = MODE.MAP_VIEW
+}: MapViewProps) => {
     const viewRef = useRef();
-    const interactedViewRef = useRef<MapView | SceneView>();
+    const interactedViewRef = useRef<__esri.MapView | __esri.SceneView>();
     const interactionHandlesRef = useRef<__esri.WatchHandle[]>();
 
     const { mapView, sceneView, activeView, setMapView, setSceneView } =
         useAppContext();
 
     const MapType = type === MODE.SCENE_VIEW ? WebScene : WebMap;
-    const ViewType = type === MODE.SCENE_VIEW ? SceneView : MapView;
+    const ViewType = type === MODE.SCENE_VIEW ? View3D : View2D;
     const SetViewFunc = type === MODE.SCENE_VIEW ? setSceneView : setMapView;
 
     const renderMap = () => {
@@ -95,7 +96,7 @@ const AppView: React.FC<AppProps> = ({ type = MODE.MAP_VIEW }: AppProps) => {
         }
     };
 
-    const syncView = (sourceView: MapView | SceneView) => {
+    const syncView = (sourceView: __esri.MapView | __esri.SceneView) => {
         const views = [mapView, sceneView];
         const currentActiveView = interactedViewRef.current;
         if (
@@ -127,23 +128,16 @@ const AppView: React.FC<AppProps> = ({ type = MODE.MAP_VIEW }: AppProps) => {
 
     return (
         <div
-            className={classNames('app-view-content', {
+            className={classNames('map-view-container', {
                 inactive: type !== activeView
             })}
         >
-            <ToolbarGroup position='bottom'>
-                <Toolbar>
-                    <Navigation context={type} />
-                </Toolbar>
-            </ToolbarGroup>
-            {/* <ToolbarGroup position='right'>
-                <Toolbar>
-                    <Search />
-                </Toolbar>
-            </ToolbarGroup> */}
-            <div ref={viewRef} className='app-view'></div>
+            <div ref={viewRef} className='map-view'></div>
+            <MapToolbar position='bottom'>
+                <Navigation context={type}></Navigation>
+            </MapToolbar>
         </div>
     );
 };
 
-export default AppView;
+export default MapView;

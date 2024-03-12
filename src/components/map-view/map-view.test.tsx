@@ -1,10 +1,10 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import AppView from './app-view';
+import MapView from './map-view';
 
 test('renders learn react link', () => {
-    render(<AppView />);
+    render(<MapView />);
     const linkElement = screen.getByText(/powered by esri/i);
     expect(linkElement).toBeInTheDocument();
 });

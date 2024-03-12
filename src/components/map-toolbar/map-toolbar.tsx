@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
-import './toolbar-group.scss';
+import './map-toolbar.scss';
 
-export type ToolbarGroupProps = {
+export type MapToolbarProps = {
     position?: 'top' | 'bottom' | 'left' | 'right';
     children?: any;
 };
@@ -13,9 +13,7 @@ enum CLASS {
     VERTICAL_RIGHT = 'v-right'
 }
 
-const ToolbarGroup: React.FC<ToolbarGroupProps> = (
-    props: ToolbarGroupProps
-) => {
+const MapToolbar: React.FC<MapToolbarProps> = (props: MapToolbarProps) => {
     const { position = 'bottom', children } = props;
     const domClassRef = useRef<string>(CLASS.HORIZONTAL_BOTTOM);
 
@@ -32,8 +30,8 @@ const ToolbarGroup: React.FC<ToolbarGroupProps> = (
     }, [position]);
 
     return (
-        <div className={`toolbar-group ${domClassRef.current}`}>{children}</div>
+        <div className={`map-toolbar ${domClassRef.current}`}>{children}</div>
     );
 };
 
-export default ToolbarGroup;
+export default MapToolbar;

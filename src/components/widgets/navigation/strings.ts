@@ -1,4 +1,5 @@
 export default {
     navigation: 'Navigation',
-    navigationToolbar: 'Navigation Toolbar'
+    pin: 'Pin',
+    unpin: 'Unpin'
 };
