@@ -24,10 +24,8 @@ type AppProps = {
 
 const AppView: React.FC<AppProps> = ({ type = MODE.MAP_VIEW }: AppProps) => {
     const viewRef = useRef();
-    const viewNavigationWatchers = useRef({
-        map: null,
-        scene: null
-    }).current;
+    const interactedViewRef = useRef<MapView | SceneView>();
+    const interactionHandlesRef = useRef<__esri.WatchHandle[]>();
 
     const { mapView, sceneView, activeView, setMapView, setSceneView } =
         useAppContext();
@@ -37,8 +35,8 @@ const AppView: React.FC<AppProps> = ({ type = MODE.MAP_VIEW }: AppProps) => {
     const SetViewFunc = type === MODE.SCENE_VIEW ? setSceneView : setMapView;
 
     const renderMap = () => {
-        const config = getConfig(ENV.AGOL).portalInfo;
-        console.log(config);
+        //ENV.AGOL
+        const config = getConfig().portalInfo;
         if (config) {
             const map = new MapType({
                 portalItem: {
@@ -60,7 +58,7 @@ const AppView: React.FC<AppProps> = ({ type = MODE.MAP_VIEW }: AppProps) => {
                 },
                 constraints: {
                     // Disable zoom snapping to get the best synchronization
-                    snapToZoom: false
+                    snapToZoom: MODE.SCENE_VIEW ? true : false
                 }
             });
             reactiveUtils
@@ -72,6 +70,50 @@ const AppView: React.FC<AppProps> = ({ type = MODE.MAP_VIEW }: AppProps) => {
         }
     };
 
+    const observeViewInteractions = () => {
+        const views = [mapView, sceneView];
+        (interactionHandlesRef.current ?? []).forEach(
+            (handle: __esri.WatchHandle) => {
+                handle.remove();
+            }
+        );
+        interactionHandlesRef.current = [];
+        for (const view of views) {
+            const handle = reactiveUtils.watch(
+                () => [view.interacting, view.viewpoint],
+                ([interacting, viewpoint]) => {
+                    // Only print the new zoom value when the view is stationary
+                    if (interacting) {
+                        interactedViewRef.current = view;
+                        syncView(interactedViewRef.current);
+                    }
+                    if (viewpoint) {
+                        syncView(view);
+                    }
+                }
+            );
+            interactionHandlesRef.current.push(handle);
+        }
+    };
+
+    const syncView = (sourceView: MapView | SceneView) => {
+        const views = [mapView, sceneView];
+        const currentActiveView = interactedViewRef.current;
+        if (
+            !currentActiveView ||
+            !currentActiveView.viewpoint ||
+            currentActiveView !== sourceView
+        ) {
+            return;
+        }
+
+        for (const view of views) {
+            if (view !== currentActiveView) {
+                view.viewpoint = currentActiveView.viewpoint;
+            }
+        }
+    };
+
     useEffect(() => {
         if (viewRef.current) {
             renderMap();
@@ -80,56 +122,7 @@ const AppView: React.FC<AppProps> = ({ type = MODE.MAP_VIEW }: AppProps) => {
 
     useEffect(() => {
         if (mapView && sceneView) {
-            if (viewNavigationWatchers.map) {
-                //     I AM HERE - MAP SYNC IS NOT FUNCTIONAL YET
-                // CHECKING IN FOR A STABLE COMMIT WITH MAP/SCENE SWITCHING COMPLETED
-                viewNavigationWatchers.map.remove();
-                viewNavigationWatchers.map = reactiveUtils.watch(
-                    () => [mapView.interacting, mapView.viewpoint],
-                    ([interacting, viewpoint]) => {
-                        if (interacting || viewpoint) {
-                            mapView.viewpoint = viewpoint as any;
-                        }
-                    }
-                );
-            }
-            // if (!viewNavigationWatchers.scene) {
-            //     console.log('I am here in scene');
-            //     viewNavigationWatchers.scene = reactiveUtils.watch(
-            //         () => [sceneView.interacting, sceneView.viewpoint],
-            //         ([interacting, viewpoint]) => {
-            //             if (!interacting) {
-            //                 mapView.viewpoint = viewpoint as any;
-            //             }
-            //         }
-            //     );
-            // }
-
-            // reactiveUtils.watch(
-            //     () => mapView.rotation,
-            //     (rotation: number) => {
-            //         if (sceneView.camera.heading !== rotation) {
-            //             sceneView.camera.heading = rotation;
-            //         }
-            //     }
-            // );
-
-            // reactiveUtils.watch(
-            //     () => [sceneView.interacting, sceneView.viewpoint],
-            //     ([interacting, viewpoint]) => {
-            //         if (interacting || viewpoint) {
-            //             mapView.viewpoint = sceneView.viewpoint;
-            //         }
-            //     }
-            // );
-            // reactiveUtils.watch(
-            //     () => sceneView.camera.heading,
-            //     (heading: number) => {
-            //         if (mapView.rotation !== heading) {
-            //             mapView.rotation = heading;
-            //         }
-            //     }
-            // );
+            observeViewInteractions();
         }
     }, [mapView, sceneView]);
 
