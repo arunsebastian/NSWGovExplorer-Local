@@ -11,7 +11,6 @@ import Navigation from '../widgets/navigation/navigation';
 import { ENV, MODE } from '@src/utils/constants';
 
 import { getConfig } from '@src/config/config';
-import { waitForFeatureLayersLoad } from '@src/utils/map';
 import { useAppContext } from '@src/contexts/app-context-provider';
 
 import './map-view.scss';
@@ -54,7 +53,7 @@ const MapView: React.FC<MapViewProps> = ({
                 },
                 constraints: {
                     // Disable zoom snapping to get the best synchronization
-                    snapToZoom: MODE.SCENE_VIEW ? true : false
+                    snapToZoom: type === MODE.SCENE_VIEW ? true : false
                 }
             }) as any;
             SetViewFunc(view);
@@ -62,9 +61,7 @@ const MapView: React.FC<MapViewProps> = ({
     };
 
     useEffect(() => {
-        if (viewRef.current) {
-            renderMap();
-        }
+        viewRef.current && renderMap();
     }, [viewRef.current]);
 
     return (
