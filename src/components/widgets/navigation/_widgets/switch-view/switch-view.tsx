@@ -13,15 +13,17 @@ import image3d from '@assets/images/3d.svg';
 
 type SwitchViewProps = {
     view: MapView | SceneView;
+    onTrigger: (activeView: string) => void;
 };
 
 const SwitchView: React.FC<SwitchViewProps> = (props: SwitchViewProps) => {
-    const { view } = props;
+    const { view, onTrigger } = props;
     const { activeView, setActiveView } = useAppContext();
     const handleSwitchViewClicked = () => {
-        setActiveView(
-            activeView === MODE.MAP_VIEW ? MODE.SCENE_VIEW : MODE.MAP_VIEW
-        );
+        const newActiveView =
+            activeView === MODE.MAP_VIEW ? MODE.SCENE_VIEW : MODE.MAP_VIEW;
+        setActiveView(newActiveView);
+        onTrigger(newActiveView);
     };
 
     return (

@@ -9,6 +9,7 @@ import Locate from './_widgets/locate/locate';
 import NorthArrow from './_widgets/compass/compass';
 import SwitchView from './_widgets/switch-view/switch-view';
 import { MODE } from '@src/utils/constants';
+import { syncMaps } from '@src/utils/map';
 
 import strings from './strings';
 import styles from './dynamic-styles';
@@ -49,6 +50,12 @@ const Navigation: React.FC<NavigationProps> = ({
         }
     };
 
+    const onViewSwitch = (activeView: string) => {
+        const source = activeView === MODE.MAP_VIEW ? sceneView : mapView;
+        const target = activeView === MODE.MAP_VIEW ? mapView : sceneView;
+        syncMaps(source, target);
+    };
+
     useEffect(() => {
         if (
             (context === MODE.SCENE_VIEW ? sceneView : mapView) &&
@@ -77,6 +84,7 @@ const Navigation: React.FC<NavigationProps> = ({
                 >
                     <SwitchView
                         view={context === MODE.SCENE_VIEW ? sceneView : mapView}
+                        onTrigger={onViewSwitch}
                     />
                     <PanRotate
                         view={context === MODE.SCENE_VIEW ? sceneView : mapView}

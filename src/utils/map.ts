@@ -1,6 +1,7 @@
 import * as reactiveUtils from '@arcgis/core/core/reactiveUtils';
 import * as geometryEngine from '@arcgis/core/geometry/geometryEngine';
 import Point from '@arcgis/core/geometry/Point';
+import { MODE } from './constants';
 
 const _waitLoad = async (layer: __esri.FeatureLayer) => {
     return new Promise((resolve: any, reject: any) => {
@@ -174,4 +175,19 @@ export const doAttributeQuery = (
             }
         );
     });
+};
+
+export const syncMaps = (
+    source: __esri.MapView | __esri.SceneView,
+    target: __esri.MapView | __esri.SceneView
+) => {
+    if (target.ready) {
+        target.goTo(source.viewpoint);
+    } else {
+        reactiveUtils
+            .whenOnce(() => target.ready)
+            .then(async () => {
+                target.goTo(source.viewpoint);
+            });
+    }
 };

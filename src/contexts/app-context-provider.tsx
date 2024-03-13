@@ -7,9 +7,9 @@ interface AppContextProps {
     loading: boolean;
     setLoading: (active: boolean) => void;
     mapView: MapView;
-    setMapView: (view: MapView) => void;
+    setMapView: (view: __esri.MapView) => void;
     sceneView: SceneView;
-    setSceneView: (view: SceneView) => void;
+    setSceneView: (view: __esri.SceneView) => void;
     activeView: string;
     setActiveView: (type: string) => void;
 }
@@ -23,8 +23,8 @@ export const AppContext = createContext<AppContextProps>({} as AppContextProps);
 
 export function AppContextProvider(props: AppContextProviderProps) {
     const [loading, setLoading] = useState<boolean>(false);
-    const [mapView, setMapView] = useState<MapView>();
-    const [sceneView, setSceneView] = useState<SceneView>();
+    const [mapView, setMapView] = useState<__esri.MapView>();
+    const [sceneView, setSceneView] = useState<__esri.SceneView>();
     const [activeView, setActiveView] = useState<string>(MODE.MAP_VIEW);
 
     const context = {
