@@ -31,6 +31,7 @@ const Navigation: React.FC<NavigationProps> = ({
     const { mapView, sceneView } = useAppContext();
     const navRef = useRef<HTMLCalciteButtonElement>();
     const popOverRef = useRef<HTMLCalcitePopoverElement>();
+    const view = context === MODE.SCENE_VIEW ? sceneView : mapView;
 
     const toggleNavigationTools = () => {
         if (context === MODE.SCENE_VIEW ? sceneView : mapView) {
@@ -57,16 +58,10 @@ const Navigation: React.FC<NavigationProps> = ({
     };
 
     useEffect(() => {
-        if (
-            (context === MODE.SCENE_VIEW ? sceneView : mapView) &&
-            navRef.current
-        ) {
-            navRef.current.removeAttribute('disabled');
-            applyCustomStyles();
-        } else {
-            navRef.current.setAttribute('disabled', 'true');
-        }
-    }, [context === MODE.SCENE_VIEW ? sceneView : mapView, navRef.current]);
+        view && navRef.current
+            ? (navRef.current.removeAttribute('disabled'), applyCustomStyles())
+            : navRef.current.setAttribute('disabled', 'true');
+    }, [view]);
 
     return (
         <>
@@ -82,10 +77,16 @@ const Navigation: React.FC<NavigationProps> = ({
                     className='nav-bar'
                     expandDisabled={true}
                 >
-                    <SwitchView
-                        view={context === MODE.SCENE_VIEW ? sceneView : mapView}
-                        onTrigger={onViewSwitch}
-                    />
+                    {sceneView && mapView && (
+                        <SwitchView
+                            view={
+                                context === MODE.SCENE_VIEW
+                                    ? sceneView
+                                    : mapView
+                            }
+                            onTrigger={onViewSwitch}
+                        />
+                    )}
                     <PanRotate
                         view={context === MODE.SCENE_VIEW ? sceneView : mapView}
                     />

@@ -8,6 +8,7 @@ import classNames from 'classnames';
 
 import MapToolbar from '../map-toolbar/map-toolbar';
 import Navigation from '../widgets/navigation/navigation';
+import LayerList from '../widgets/layer-list/layer-list';
 import { ENV, MODE } from '@src/utils/constants';
 
 import { getConfig } from '@src/config/config';
@@ -30,8 +31,7 @@ const MapView: React.FC<MapViewProps> = ({
     const SetViewFunc = type === MODE.SCENE_VIEW ? setSceneView : setMapView;
 
     const renderMap = () => {
-        //ENV.AGOL
-        const config = getConfig().portalInfo;
+        const config = getConfig(ENV.AGOL).portalInfo;
         if (config) {
             const map = new MapType({
                 portalItem: {
@@ -73,6 +73,9 @@ const MapView: React.FC<MapViewProps> = ({
             <div ref={viewRef} className='map-view'></div>
             <MapToolbar position='bottom'>
                 <Navigation context={type}></Navigation>
+            </MapToolbar>
+            <MapToolbar position='right'>
+                <LayerList context={type}></LayerList>
             </MapToolbar>
         </div>
     );
