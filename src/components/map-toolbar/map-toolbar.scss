@@ -11,6 +11,9 @@
         flex-direction: row;
         align-items: center;
         justify-content: space-around;
+        &.s-v {
+            flex-direction: column;
+        }
     }
     &.h-bottom {
         bottom: 0px;
@@ -20,15 +23,28 @@
         flex-direction: row;
         align-items: center;
         justify-content: space-around;
+        &.s-v {
+            flex-direction: column;
+        }
     }
     &.v-left {
         left: 0px;
         flex-direction: column;
         padding: 20px 0px 20px 10px;
+        &.s-h {
+            flex-direction: row;
+            padding-left: 0px;
+            padding-right: 0px;
+        }
     }
     &.v-right {
         right: 0px;
         flex-direction: column;
         padding: 20px 10px 20px 0px;
+        &.s-h {
+            flex-direction: row;
+            padding-left: 0px;
+            padding-right: 0px;
+        }
     }
 }

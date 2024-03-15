@@ -3,6 +3,7 @@ import './map-toolbar.scss';
 
 export type MapToolbarProps = {
     position?: 'top' | 'bottom' | 'left' | 'right';
+    stack?: 'horizontal' | 'vertical';
     children?: any;
 };
 
@@ -13,21 +14,46 @@ enum CLASS {
     VERTICAL_RIGHT = 'v-right'
 }
 
+enum STACK {
+    HORIZONTAL = 's-h',
+    VERTICAL = 's-v'
+}
+
 const MapToolbar: React.FC<MapToolbarProps> = (props: MapToolbarProps) => {
-    const { position = 'bottom', children } = props;
+    const { position = 'bottom', stack, children } = props;
     const domClassRef = useRef<string>(CLASS.HORIZONTAL_BOTTOM);
 
     useEffect(() => {
         if (position === 'top') {
-            domClassRef.current = CLASS.HORIZONTAL_TOP;
+            domClassRef.current = `${CLASS.HORIZONTAL_TOP} ${
+                stack === 'vertical' ? STACK.VERTICAL : ''
+            }`;
+            // if (stack === 'vertical') {
+            //     domClassRef.current = `${CLASS.HORIZONTAL_TOP} `;
+            // }
         } else if (position === 'right') {
-            domClassRef.current = CLASS.VERTICAL_RIGHT;
+            domClassRef.current = `${CLASS.VERTICAL_RIGHT} ${
+                stack === 'horizontal' ? STACK.HORIZONTAL : ''
+            }`;
+            // if (stack === 'horizontal') {
+            //     domClassRef.current = `${CLASS.VERTICAL_LEFT} ${STACK.HORIZONTAL}`;
+            // }
         } else if (position === 'left') {
-            domClassRef.current = CLASS.VERTICAL_LEFT;
+            domClassRef.current = `${CLASS.VERTICAL_LEFT} ${
+                stack === 'horizontal' ? CLASS.VERTICAL_LEFT : ''
+            }`;
+            // if (stack === 'horizontal') {
+            //     domClassRef.current = `${CLASS.VERTICAL_LEFT} ${STACK.HORIZONTAL}`;
+            // }
         } else {
-            domClassRef.current = CLASS.HORIZONTAL_BOTTOM;
+            domClassRef.current = `${CLASS.HORIZONTAL_BOTTOM} ${
+                stack === 'vertical' ? CLASS.HORIZONTAL_BOTTOM : ''
+            }`;
+            // if (stack === 'vertical') {
+            //     domClassRef.current = `${CLASS.HORIZONTAL_BOTTOM} ${STACK.VERTICAL}`;
+            // }
         }
-    }, [position]);
+    }, [position, stack]);
 
     return (
         <div className={`map-toolbar ${domClassRef.current}`}>{children}</div>
