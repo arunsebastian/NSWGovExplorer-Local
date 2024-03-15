@@ -6,7 +6,9 @@ const Config = {
     [ENV.DEV]: {
         url: 'https://beta.portal.spatial.nsw.gov.au/portal',
         mapId: '2995f4cb2581421f8172f988c18ff4c2',
-        sceneId: '49fde993776b4efeb1a791539b1f782b'
+        sceneId: '49fde993776b4efeb1a791539b1f782b',
+        basemapGroup2d: '1b60560a776046aebf3f64d2e8d41663', //'8a7a84efeaf147c0aedf3f29c06728bd',
+        basemapGroup3d: '1b60560a776046aebf3f64d2e8d41663'
     },
     [ENV.TEST]: {
         url: 'https://alpha.portal.spatial.nsw.gov.au/portal',
@@ -25,7 +27,13 @@ const Config = {
     }
 };
 
-type PortalInfo = { url: string; mapId: string; sceneId: string };
+type PortalInfo = {
+    url: string;
+    mapId: string;
+    sceneId: string;
+    basemapGroup2d?: string;
+    basemapGroup3d?: string;
+};
 
 export type Config = {
     portalInfo: PortalInfo;

@@ -55,9 +55,7 @@ const LayerList: React.FC<LayerListProps> = ({
         });
 
         reactiveUtils
-            .whenOnce(() => {
-                layerListVM.state === 'ready';
-            })
+            .whenOnce(() => (layerList as any).messages)
             .then(() => {
                 (layerList as any).messages
                     ? ((layerList as any).messages.widgetLabel = strings.title)
@@ -78,6 +76,7 @@ const LayerList: React.FC<LayerListProps> = ({
 
         const expandWidget = new Expand({
             expandIcon: 'layers',
+            collapseIcon: 'layers',
             content: layerList,
             container: document.createElement('div')
         });

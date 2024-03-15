@@ -3,12 +3,14 @@ import { default as View2D } from '@arcgis/core/views/MapView';
 import { default as View3D } from '@arcgis/core/views/SceneView';
 import WebMap from '@arcgis/core/WebMap';
 import WebScene from '@arcgis/core/WebScene';
-import * as reactiveUtils from '@arcgis/core/core/reactiveUtils';
+import ScaleBar from '@arcgis/core/widgets/ScaleBar';
 import classNames from 'classnames';
 
 import MapToolbar from '../map-toolbar/map-toolbar';
 import Navigation from '../widgets/navigation/navigation';
 import LayerList from '../widgets/layer-list/layer-list';
+import BaseMapSelector from '../widgets/basemap-selector/basemap-selector';
+
 import { ENV, MODE } from '@src/utils/constants';
 
 import { getConfig } from '@src/config/config';
@@ -56,6 +58,18 @@ const MapView: React.FC<MapViewProps> = ({
                     snapToZoom: type === MODE.SCENE_VIEW ? true : false
                 }
             }) as any;
+
+            // The scale bar displays both metric and non-metric units.
+            // not suppored in 3d scenes at this point
+            const scaleBar = new ScaleBar({
+                view: view,
+                unit: 'dual'
+            });
+
+            // Add the widget to the bottom left corner of the view
+            view.ui.add(scaleBar, {
+                position: 'bottom-left'
+            });
             SetViewFunc(view);
         }
     };
@@ -76,6 +90,7 @@ const MapView: React.FC<MapViewProps> = ({
             </MapToolbar>
             <MapToolbar position='right'>
                 <LayerList context={type}></LayerList>
+                {/* <BaseMapSelector context={type}></BaseMapSelector> */}
             </MapToolbar>
         </div>
     );

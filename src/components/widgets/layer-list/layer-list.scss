@@ -1,8 +1,26 @@
 .layer-list-content {
-    .esri-expand__container--expanded {
-        padding: 5px 0px;
-        .esri-expand__panel {
-            display: none;
+    display: flex;
+    flex-direction: column;
+    .layer-list-content-item {
+        .esri-layer-list {
+            // padding: 10px;
+        }
+        // .esri-expand {
+        //     background-color: transparent !important;
+        // }
+        .esri-expand__container--expanded {
+            padding: 0px;
+            margin: 0px;
+            .esri-expand__panel {
+                width: 32px;
+                position: absolute;
+                left: -32px;
+                box-shadow: 0 1px 2px #0000004d;
+                // border: 1px solid red;
+            }
+        }
+        .esri-expand__content--expanded {
+            margin: 0px;
         }
     }
 }
