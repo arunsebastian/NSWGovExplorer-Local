@@ -1,12 +1,12 @@
 import React, { useRef, useEffect } from 'react';
 import { useAppContext } from '@src/contexts/app-context-provider';
+
 import { MODE } from '@src/utils/constants';
+import ESRILegend from '@arcgis/core/widgets/Legend';
+import Expand from '@arcgis/core/widgets/Expand';
 
 import strings from './strings';
-import styles from './dynamic-styles';
 import './legend.scss';
-
-import { CalciteButton } from '@esri/calcite-components-react';
 
 type LegendProps = {
     context?: string;
@@ -16,41 +16,61 @@ const Legend: React.FC<LegendProps> = ({
     context = MODE.MAP_VIEW
 }: LegendProps) => {
     const { mapView, sceneView } = useAppContext();
-    const legendRef = useRef<HTMLCalciteButtonElement>();
+    const containerRef = useRef<HTMLDivElement>();
     const view = context === MODE.SCENE_VIEW ? sceneView : mapView;
 
+    const purgeContainer = () => {
+        const children: Array<HTMLElement> = Array.prototype.slice.call(
+            containerRef.current.childNodes
+        );
+        children.forEach((child: HTMLElement) => {
+            containerRef.current.removeChild(child);
+        });
+        containerRef.current.innerHTML = '';
+    };
+
+    const renderLegend = () => {
+        const legend = new ESRILegend({
+            container: document.createElement('div')
+        });
+
+        const expandWidget = new Expand({
+            expandIcon: 'legend',
+            content: legend,
+            container: document.createElement('div'),
+            label: strings.legend,
+            expandTooltip: strings.legend
+        });
+
+        containerRef.current.appendChild(expandWidget.container as HTMLElement);
+    };
+
     const applyCustomStyles = () => {
-        const node = legendRef.current;
-        const shadowRoot = node.shadowRoot;
-        if (shadowRoot) {
-            const sheet = new CSSStyleSheet();
-            sheet.replaceSync(styles.contentButton);
-            const elemStyleSheets = node.shadowRoot.adoptedStyleSheets;
-            // Append your style to the existing style sheet.
-            shadowRoot.adoptedStyleSheets = [...elemStyleSheets, sheet];
+        const node = containerRef.current;
+        const button = node.querySelector(`calcite-button`);
+        if (button) {
+            let textEl = button.querySelector(`:scope > span`) as HTMLElement;
+            if (!textEl) {
+                textEl = document.createElement('span');
+                textEl.className = 'legent-text';
+                button.appendChild(textEl);
+            }
+            textEl.innerText = strings.legend;
         }
     };
 
     useEffect(() => {
-        view && legendRef.current
-            ? (legendRef.current.removeAttribute('disabled'),
-              applyCustomStyles())
-            : legendRef.current.setAttribute('disabled', 'true');
-    }, [view]);
+        if (view) {
+            purgeContainer();
+            renderLegend();
+            window.setTimeout(() => {
+                applyCustomStyles();
+            }, 1000);
+            applyCustomStyles();
+        }
+    }, [view, containerRef.current]);
 
-    return (
-        <CalciteButton
-            id={`legend-trigger-${context}`}
-            title={strings.legend}
-            label={strings.legend}
-            ref={legendRef}
-            kind='neutral'
-            className='legend-trigger'
-            onClick={() => {}}
-        >
-            {strings.legend}
-        </CalciteButton>
-    );
+    return <div className='legend-content' ref={containerRef}></div>;
 };
 
 export default Legend;

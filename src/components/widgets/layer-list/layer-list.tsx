@@ -77,6 +77,7 @@ const LayerList: React.FC<LayerListProps> = ({
         const expandWidget = new Expand({
             expandIcon: 'layers',
             collapseIcon: 'layers',
+            expandTooltip: strings.title,
             content: layerList,
             container: document.createElement('div')
         });

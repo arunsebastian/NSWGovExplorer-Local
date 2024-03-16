@@ -3,27 +3,23 @@
     flex-direction: column;
     .layer-list-content-item {
         .esri-expand {
-            margin-top: 20px;
+            margin-top: 40px;
+            background: transparent;
         }
-        .esri-layer-list {
-            // padding: 10px;
-        }
-        // .esri-expand {
-        //     background-color: transparent !important;
-        // }
         .esri-expand__container--expanded {
             padding: 0px;
             margin: 0px;
+            display: flex;
             .esri-expand__panel {
                 width: 32px;
-                position: absolute;
-                left: -32px;
+                height: 32px;
+                // position: absolute;
+                // left: -32px;
                 box-shadow: 0 1px 2px #0000004d;
-                // border: 1px solid red;
             }
-        }
-        .esri-expand__content--expanded {
-            margin: 0px;
+            .esri-expand__content--expanded {
+                margin: 0px;
+            }
         }
     }
 }

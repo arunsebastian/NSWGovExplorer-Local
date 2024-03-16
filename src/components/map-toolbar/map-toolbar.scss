@@ -30,7 +30,7 @@
     &.v-left {
         left: 0px;
         flex-direction: column;
-        padding: 20px 0px 20px 10px;
+        // padding: 20px 0px 20px 10px;
         &.s-h {
             flex-direction: row;
             padding-left: 0px;
@@ -40,7 +40,7 @@
     &.v-right {
         right: 0px;
         flex-direction: column;
-        padding: 20px 10px 20px 0px;
+        // padding: 20px 10px 20px 0px;
         &.s-h {
             flex-direction: row;
             padding-left: 0px;
