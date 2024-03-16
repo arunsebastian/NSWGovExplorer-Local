@@ -31,7 +31,9 @@ const Legend: React.FC<LegendProps> = ({
 
     const renderLegend = () => {
         const legend = new ESRILegend({
-            container: document.createElement('div')
+            view: view,
+            container: document.createElement('div'),
+            hideLayersNotInCurrentView: true
         });
 
         const expandWidget = new Expand({

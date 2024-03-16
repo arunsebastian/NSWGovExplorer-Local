@@ -30,6 +30,10 @@
             background-color: #fff;
             box-shadow: none;
             height: calc(100vh - 15px);
+            overflow: auto;
+        }
+        .esri-widget__heading {
+            display: none;
         }
     }
 }
