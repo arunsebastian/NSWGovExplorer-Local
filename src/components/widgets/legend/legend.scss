@@ -3,6 +3,7 @@
         calcite-button {
             border-radius: 10px 0px 0px 10px !important;
             height: 70px;
+            box-shadow: 0 1px 2px #0000004d;
             calcite-icon {
                 display: none;
             }
@@ -22,7 +23,6 @@
         display: flex;
         .esri-expand__panel {
             max-height: 70px;
-            // box-shadow: 0 1px 2px #0000004d;
         }
         .esri-expand__content--expanded {
             margin: 0px;

@@ -1,7 +1,7 @@
 import { ENV } from '../utils/constants';
 
 const enforceDev = false;
-const navigationMenuTimeout = 3; // in seconds
+const navigationMenuTimeout = 1; // in seconds
 
 const Config = {
     [ENV.DEV]: {
