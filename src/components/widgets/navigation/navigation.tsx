@@ -8,7 +8,8 @@ import PreviousNext from './_widgets/previous-next/previous-next';
 import Locate from './_widgets/locate/locate';
 import NorthArrow from './_widgets/compass/compass';
 import SwitchView from './_widgets/switch-view/switch-view';
-import { MODE } from '@src/utils/constants';
+import { MODE, TOOL } from '@src/utils/constants';
+import { getWidgetConfig } from '@src/config/config';
 import { syncMaps } from '@src/utils/map';
 
 import strings from './strings';
@@ -25,18 +26,48 @@ type NavigationProps = {
     context?: string;
 };
 
+type PinStatus = {
+    status: boolean;
+};
+
 const Navigation: React.FC<NavigationProps> = ({
     context = MODE.MAP_VIEW
 }: NavigationProps) => {
     const { mapView, sceneView } = useAppContext();
     const navRef = useRef<HTMLCalciteButtonElement>();
+    const toolsDisplayTimerRef = useRef<any>();
     const popOverRef = useRef<HTMLCalcitePopoverElement>();
     const view = context === MODE.SCENE_VIEW ? sceneView : mapView;
+    const config = getWidgetConfig(TOOL.NAVIGATION);
 
-    const toggleNavigationTools = () => {
+    const showNavigationTools = () => {
+        toolsDisplayTimerRef.current
+            ? window.clearTimeout(toolsDisplayTimerRef.current)
+            : null;
         if (context === MODE.SCENE_VIEW ? sceneView : mapView) {
-            popOverRef.current.open = !popOverRef.current.open;
+            popOverRef.current.open = true;
         }
+    };
+
+    const hideNavigationTools = () => {
+        toolsDisplayTimerRef.current = window.setTimeout(() => {
+            const currentDoms = Array.from(document.querySelectorAll(':hover'));
+            const keepNavtoolOpen = currentDoms.some((dom: HTMLElement) => {
+                return (
+                    dom.classList.contains('nav-bar') ||
+                    dom.classList.contains('nav-trigger') ||
+                    (dom.tagName.toLowerCase() === 'calcite-popover' &&
+                        dom.getAttribute('label') === strings.navigation)
+                );
+            });
+            if (
+                !keepNavtoolOpen &&
+                (context === MODE.SCENE_VIEW ? sceneView : mapView)
+            ) {
+                popOverRef.current.open = false;
+                window.clearTimeout(toolsDisplayTimerRef.current);
+            }
+        }, config.displayTimeOut * 1000);
     };
 
     const applyCustomStyles = () => {
@@ -71,6 +102,7 @@ const Navigation: React.FC<NavigationProps> = ({
                 open={false}
                 placement='top'
                 referenceElement={`nav-trigger-${context}`}
+                onMouseLeave={hideNavigationTools}
             >
                 <CalciteActionBar
                     layout='horizontal'
@@ -114,7 +146,8 @@ const Navigation: React.FC<NavigationProps> = ({
                 ref={navRef}
                 kind='neutral'
                 className='nav-trigger'
-                onMouseOver={toggleNavigationTools}
+                onMouseOver={showNavigationTools}
+                onMouseLeave={hideNavigationTools}
             >
                 {strings.navigation}
             </CalciteButton>

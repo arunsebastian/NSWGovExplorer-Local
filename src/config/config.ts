@@ -1,6 +1,7 @@
 import { ENV } from '../utils/constants';
 
 const enforceDev = false;
+const navigationMenuTimeout = 3; // in seconds
 
 const Config = {
     [ENV.DEV]: {
@@ -35,13 +36,24 @@ type PortalInfo = {
     basemapGroup3d?: string;
 };
 
-export type Config = {
+export type PortalConfig = {
     portalInfo: PortalInfo;
 };
 
-export const getConfig = (env?: string): Config => {
+export const getConfig = (env?: string): PortalConfig => {
     env = env ?? process.env.NODE_ENV;
     return {
         portalInfo: enforceDev ? Config[ENV.DEV] : Config[env]
     };
+};
+
+export const getWidgetConfig = (key: string) => {
+    const widgetConfig = {
+        navigation: {
+            displayTimeOut: navigationMenuTimeout
+        }
+    } as any;
+    return typeof key === 'string' && widgetConfig[key]
+        ? widgetConfig[key]
+        : widgetConfig;
 };

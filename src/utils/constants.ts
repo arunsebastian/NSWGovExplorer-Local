@@ -13,7 +13,8 @@ export const TOOL = {
     TEXT: 'text',
     SELECT: 'select',
     MEASURE_LINE: 'measure-line',
-    MEASURE_AREA: 'measure-area'
+    MEASURE_AREA: 'measure-area',
+    NAVIGATION: 'navigation'
 };
 
 export const ENV = {
