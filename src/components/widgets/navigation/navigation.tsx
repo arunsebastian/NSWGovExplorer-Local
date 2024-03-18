@@ -128,7 +128,7 @@ const Navigation: React.FC<NavigationProps> = ({
             const sheet = new CSSStyleSheet();
             sheet.replaceSync(styles.contentButton);
             const elemStyleSheets = node.shadowRoot.adoptedStyleSheets;
-            // Append your style to the existing style sheet.
+            // Append the style to the existing style sheet.
             shadowRoot.adoptedStyleSheets = [...elemStyleSheets, sheet];
         }
     };
@@ -173,18 +173,24 @@ const Navigation: React.FC<NavigationProps> = ({
                             onTrigger={onViewSwitch}
                         />
                     )}
-                    <PanRotate
-                        view={context === MODE.SCENE_VIEW ? sceneView : mapView}
-                    />
+                    {context === MODE.SCENE_VIEW && (
+                        <PanRotate
+                            view={
+                                context === MODE.SCENE_VIEW
+                                    ? sceneView
+                                    : mapView
+                            }
+                        />
+                    )}
                     <Zoom
                         view={context === MODE.SCENE_VIEW ? sceneView : mapView}
                     />
                     <Home
                         view={context === MODE.SCENE_VIEW ? sceneView : mapView}
                     />
-                    <PreviousNext
+                    {/* <PreviousNext
                         view={context === MODE.SCENE_VIEW ? sceneView : mapView}
-                    />
+                    /> */}
                     <Locate
                         view={context === MODE.SCENE_VIEW ? sceneView : mapView}
                     />
