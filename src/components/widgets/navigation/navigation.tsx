@@ -28,7 +28,6 @@ type NavigationProps = {
 };
 
 enum PIN_STATUS {
-    INACTIVE = 'inactive',
     PIN = 'pushpin',
     UNPIN = 'unpin'
 }
@@ -40,16 +39,13 @@ const Navigation: React.FC<NavigationProps> = ({
     const navRef = useRef<HTMLCalciteButtonElement>();
     const toolsDisplayTimerRef = useRef<any>();
     const popOverRef = useRef<HTMLCalcitePopoverElement>();
-    const pinStatusRef = useRef<string>(PIN_STATUS.INACTIVE);
+    const pinStatusRef = useRef<string>(PIN_STATUS.UNPIN);
     const view = context === MODE.SCENE_VIEW ? sceneView : mapView;
     const config = getWidgetConfig(TOOL.NAVIGATION);
 
     const handlePointerLeaveOnTriggerBtn = () => {
         const pinStatus = pinStatusRef.current;
-        if (isMobileOrTablet()) {
-            window.clearTimeout(toolsDisplayTimerRef.current);
-            hideNavToolbar();
-        } else {
+        if (!isMobileOrTablet()) {
             if (pinStatus == PIN_STATUS.UNPIN) {
                 window.clearTimeout(toolsDisplayTimerRef.current);
                 toolsDisplayTimerRef.current = window.setTimeout(() => {
@@ -57,7 +53,6 @@ const Navigation: React.FC<NavigationProps> = ({
                     if (!shouldBeOpen) {
                         hideNavToolbar();
                         window.clearTimeout(toolsDisplayTimerRef.current);
-                        setPinStatus(PIN_STATUS.INACTIVE);
                     }
                 }, config.displayTimeOut * 1000);
             }
@@ -66,13 +61,9 @@ const Navigation: React.FC<NavigationProps> = ({
 
     const handlePointerEnterOnTriggerBtn = () => {
         const pinStatus = pinStatusRef.current;
-        if (isMobileOrTablet()) {
-            window.clearTimeout(toolsDisplayTimerRef.current);
-            if (popOverRef.current.open) popOverRef.current.open = false;
-        } else {
-            if (pinStatus == PIN_STATUS.INACTIVE) {
+        if (!isMobileOrTablet()) {
+            if (pinStatus == PIN_STATUS.UNPIN) {
                 showNavToolbar();
-                setPinStatus(PIN_STATUS.UNPIN);
             }
         }
     };
@@ -88,14 +79,13 @@ const Navigation: React.FC<NavigationProps> = ({
             } else if (pinStatus === PIN_STATUS.PIN) {
                 window.clearTimeout(toolsDisplayTimerRef.current);
                 toolsDisplayTimerRef.current = window.setTimeout(() => {
+                    setPinStatus(PIN_STATUS.UNPIN);
                     const shouldBeOpen = shouldKeepNavbarOpen();
                     if (!shouldBeOpen) {
                         hideNavToolbar();
                         window.clearTimeout(toolsDisplayTimerRef.current);
-                        setPinStatus(PIN_STATUS.INACTIVE);
                     } else {
                         showNavToolbar();
-                        setPinStatus(PIN_STATUS.UNPIN);
                     }
                 }, config.displayTimeOut * 1000);
             }
@@ -127,7 +117,8 @@ const Navigation: React.FC<NavigationProps> = ({
     };
 
     const setPinStatus = (status: string) => {
-        pinStatusRef.current = status ?? PIN_STATUS.INACTIVE;
+        pinStatusRef.current = status;
+        navRef.current.iconStart = status;
     };
 
     const applyCustomStyles = () => {
@@ -206,7 +197,7 @@ const Navigation: React.FC<NavigationProps> = ({
                 id={`nav-trigger-${context}`}
                 title={strings.navigation}
                 label={strings.navigation}
-                iconStart={pinStatusRef.current}
+                iconStart={PIN_STATUS.UNPIN}
                 ref={navRef}
                 kind='neutral'
                 className='nav-trigger'
