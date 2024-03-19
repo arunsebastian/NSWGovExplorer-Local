@@ -17,7 +17,12 @@ const Legend: React.FC<LegendProps> = ({
 }: LegendProps) => {
     const { mapView, sceneView } = useAppContext();
     const containerRef = useRef<HTMLDivElement>();
+    const legendRendered = useRef<boolean>(false);
     const view = context === MODE.SCENE_VIEW ? sceneView : mapView;
+
+    const isLegendRendered = () => {
+        return legendRendered.current;
+    };
 
     const purgeContainer = () => {
         const children: Array<HTMLElement> = Array.prototype.slice.call(
@@ -30,21 +35,23 @@ const Legend: React.FC<LegendProps> = ({
     };
 
     const renderLegend = () => {
-        const legend = new ESRILegend({
-            view: view,
-            container: document.createElement('div'),
-            hideLayersNotInCurrentView: true
-        });
-
-        const expandWidget = new Expand({
-            expandIcon: 'legend',
-            content: legend,
-            container: document.createElement('div'),
-            label: strings.legend,
-            expandTooltip: strings.legend
-        });
-
-        containerRef.current.appendChild(expandWidget.container as HTMLElement);
+        if (!isLegendRendered()) {
+            const legendNode = document.createElement('div');
+            legendNode.setAttribute('class', 'legend-container');
+            const legend = new ESRILegend({
+                view: view,
+                container: legendNode,
+                hideLayersNotInCurrentView: true
+            });
+            new Expand({
+                expandIcon: 'legend',
+                content: legend,
+                label: strings.legend,
+                expandTooltip: strings.legend,
+                container: containerRef.current
+            });
+            legendRendered.current = true;
+        }
     };
 
     const applyCustomStyles = () => {
@@ -68,11 +75,10 @@ const Legend: React.FC<LegendProps> = ({
             window.setTimeout(() => {
                 applyCustomStyles();
             }, 1000);
-            applyCustomStyles();
         }
     }, [view, containerRef.current]);
 
-    return <div className='legend-content' ref={containerRef}></div>;
+    return <div className='legend-trigger' ref={containerRef}></div>;
 };
 
 export default Legend;

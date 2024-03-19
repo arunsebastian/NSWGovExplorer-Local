@@ -9,8 +9,9 @@ import classNames from 'classnames';
 import MapToolbar from '../map-toolbar/map-toolbar';
 import Navigation from '../widgets/navigation/navigation';
 import Legend from '../widgets/legend/legend';
-import LayerList from '../widgets/layer-list/layer-list';
-// import BaseMapSelector from '../widgets/basemap-selector/basemap-selector';
+import DataCatalog from '../widgets/data-catalog/data-catalog';
+// import OOTB from '../widgets/basemaps/ootb';
+// import BasemapSelector from '../widgets/basemaps/basemap-selector';
 
 import { ENV, MODE } from '@src/utils/constants';
 
@@ -90,8 +91,10 @@ const MapView: React.FC<MapViewProps> = ({
                 <Navigation context={type}></Navigation>
             </MapToolbar>
             <MapToolbar position='right' stack='horizontal'>
-                <LayerList context={type}></LayerList>
+                <DataCatalog context={type}></DataCatalog>
                 <Legend context={type}></Legend>
+                {/* <OOTB context={type}></OOTB>
+                <BasemapSelector context={type}></BasemapSelector> */}
             </MapToolbar>
         </div>
     );

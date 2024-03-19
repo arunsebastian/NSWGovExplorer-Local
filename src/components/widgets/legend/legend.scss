@@ -1,5 +1,5 @@
-.legend-content {
-    .esri-expand {
+.legend-trigger {
+    &.esri-expand {
         calcite-button {
             border-radius: 10px 0px 0px 10px !important;
             height: 70px;
@@ -21,6 +21,9 @@
         padding: 0px;
         margin: 0px;
         display: flex;
+        border-radius: 6px;
+        height: calc(100vh - 15px);
+        overflow-y: auto;
         .esri-expand__panel {
             max-height: 70px;
         }
@@ -28,8 +31,6 @@
             margin: 0px;
             background-color: #fff;
             box-shadow: none;
-            height: calc(100vh - 15px);
-            overflow: auto;
         }
         .esri-widget__heading {
             display: none;

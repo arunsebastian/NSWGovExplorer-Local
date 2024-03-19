@@ -1,4 +1,5 @@
 import React, { useRef, useEffect } from 'react';
+// import { createPortal } from 'react-dom/client';
 import { useAppContext } from '@src/contexts/app-context-provider';
 
 import { MODE } from '@src/utils/constants';
@@ -7,12 +8,11 @@ import Expand from '@arcgis/core/widgets/Expand';
 import LayerListVM from '@arcgis/core/widgets/LayerList/LayerListViewModel';
 import * as reactiveUtils from '@arcgis/core/core/reactiveUtils';
 
+import BasemapSelector from '../basemaps/basemap-selector';
+
 import strings from './strings';
 import './layer-list.scss';
-
-// import {
-
-// } from '@esri/calcite-components-react';
+import { createPortal } from 'react-dom';
 
 type LayerListProps = {
     context?: string;
@@ -38,6 +38,12 @@ const LayerList: React.FC<LayerListProps> = ({
 
     const renderLayerList = () => {
         layerListVM.set('view', view);
+
+        const wrapperNode = document.createElement('div');
+        wrapperNode.setAttribute('class', 'layer-list-content');
+
+        const layerListNode = document.createElement('div');
+        layerListNode.setAttribute('class', 'layer-list-content-item');
         const layerList = new ESRILayerList({
             viewModel: layerListVM,
             visibleElements: {
@@ -51,9 +57,8 @@ const LayerList: React.FC<LayerListProps> = ({
             //listItemCreatedFunction: defineActions,
             dragEnabled: true,
             collapsed: false,
-            container: document.createElement('div')
+            container: layerListNode
         });
-
         reactiveUtils
             .whenOnce(() => (layerList as any).messages)
             .then(() => {
@@ -73,12 +78,21 @@ const LayerList: React.FC<LayerListProps> = ({
                 }
             }
         );
+        wrapperNode.append(layerListNode);
+
+        //base-map selector
+
+        const basemapNode = document.createElement('div');
+        basemapNode.setAttribute('class', 'layer-list-content-item');
+        //const root = createPortal([basemapNode as Element]);
+        createPortal(<BasemapSelector context={context} />, basemapNode);
+        wrapperNode.append(basemapNode);
 
         const expandWidget = new Expand({
             expandIcon: 'layers',
             collapseIcon: 'layers',
             expandTooltip: strings.title,
-            content: layerList,
+            content: wrapperNode,
             container: document.createElement('div')
         });
         reactiveUtils.watch(
@@ -93,19 +107,13 @@ const LayerList: React.FC<LayerListProps> = ({
     };
 
     useEffect(() => {
-        //view &&
         if (view) {
             purgeContainer();
             renderLayerList();
         }
     }, [view, containerRef.current]);
 
-    return (
-        <div className='layer-list-content'>
-            <div ref={containerRef} className='layer-list-content-item'></div>
-            <div className='layer-list-content-item'></div>
-        </div>
-    );
+    return <div className='layer-list-wrapper' ref={containerRef}></div>;
 };
 
 export default LayerList;

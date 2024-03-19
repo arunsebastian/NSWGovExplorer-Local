@@ -1,0 +1,11 @@
+.basemap-layer-list {
+    display: flex;
+    flex-flow: column;
+    .basemap-layer-list-heading {
+        height: 30px;
+        line-height: 30px;
+        border-bottom: 1px solid var(--calcite-color-border-3);
+        border-top: 1px solid var(--calcite-color-border-3);
+        padding-left: 8px;
+    }
+}

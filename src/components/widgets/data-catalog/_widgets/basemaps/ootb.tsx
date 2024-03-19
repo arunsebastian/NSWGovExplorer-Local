@@ -22,6 +22,13 @@ const BaseMapSelector: React.FC<BasemapSelectorProps> = ({
     const containerRef = useRef<HTMLDivElement>();
     const view = context === MODE.SCENE_VIEW ? sceneView : mapView;
 
+    useEffect(() => {
+        if (view && containerRef.current) {
+            purgeContainer();
+            renderBasemapGallery();
+        }
+    }, [view, containerRef.current]);
+
     const purgeContainer = () => {
         const children: Array<HTMLElement> = Array.prototype.slice.call(
             containerRef.current.childNodes
@@ -39,13 +46,12 @@ const BaseMapSelector: React.FC<BasemapSelectorProps> = ({
                 ? config.portalInfo.basemapGroup3d
                 : config.portalInfo.basemapGroup2d;
 
-        // I AM HERE:: Investigate why portal search is not happening
         const basemapGallery = new BasemapGallery({
             view: view,
-            source: {
-                portal: { url: config.portalInfo.url },
-                query: `(title:'${groupIdentifier}' OR id:'${groupIdentifier})' AND type:web map`
-            } as __esri.PortalBasemapsSourceProperties
+            source: new PortalBasemapsSource({
+                portal: new Portal({ url: config.portalInfo.url }),
+                query: `(title:${groupIdentifier} OR id:${groupIdentifier})`
+            }) as __esri.PortalBasemapsSourceProperties
         });
 
         const expandWidget = new Expand({
@@ -56,20 +62,7 @@ const BaseMapSelector: React.FC<BasemapSelectorProps> = ({
         containerRef.current.appendChild(expandWidget.container as HTMLElement);
     };
 
-    useEffect(() => {
-        //view &&
-        if (view) {
-            purgeContainer();
-            renderBasemapGallery();
-        }
-    }, [view, containerRef.current]);
-
-    return <div ref={containerRef} className='basemap-gallery'></div>;
+    return <div ref={containerRef} className='selected-basemap'></div>;
 };
 
 export default BaseMapSelector;
-
-// const basemapGallery = new BasemapGallery({
-//     view: view,
-//     source: new Portal({ url: 'https://www.yourportal.arcgis.com' }) // autocasts to PortalBasemapsSource
-// });

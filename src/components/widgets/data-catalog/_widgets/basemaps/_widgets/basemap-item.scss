@@ -1,0 +1,11 @@
+.basemap-item {
+    height: 75px;
+    width: 100%;
+    border: 1px solid #ccc;
+    padding: 5px;
+    background-color: #fff;
+    .basemap-item-title {
+        font-family: var(--app-font-family);
+        font-size: 12px;
+    }
+}

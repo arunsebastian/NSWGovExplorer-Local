@@ -1,0 +1,27 @@
+.layer-list-wrapper {
+    display: flex;
+    flex-direction: column;
+    .esri-expand {
+        margin-top: 20px;
+        background: transparent;
+        calcite-button {
+            border-radius: 6px;
+            border: 1px solid #a2a2a2;
+            box-shadow: 0 1px 2px #0000004d;
+        }
+    }
+    .esri-expand__container--expanded {
+        padding: 0px;
+        margin: 0px;
+        display: flex;
+        .esri-expand__panel {
+            width: 32px;
+            height: 32px;
+            // position: absolute;
+            // left: -32px;
+        }
+        .esri-expand__content--expanded {
+            margin: 0px;
+        }
+    }
+}

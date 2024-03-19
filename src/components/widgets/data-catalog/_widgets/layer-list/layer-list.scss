@@ -1,0 +1,31 @@
+.data-layer-list {
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+    flex: 1;
+    .data-layer-list-heading {
+        width: 100%;
+        height: 40px;
+        display: flex;
+        border-bottom: 1px solid var(--calcite-color-border-3);
+        // // --tw-shadow: 0 -1px 0 var(--calcite-color-border-3);
+        // // --tw-shadow-colored: 0 -1px 0 var(--tw-shadow-color);
+        box-shadow: 0 -1px 0 var(--calcite-color-border-3);
+        calcite-label {
+            flex: 1;
+            height: 40px;
+            line-height: 40px;
+            padding: 12px 0 0 8px;
+        }
+        calcite-button {
+            height: 32px;
+            width: 32px;
+            padding-top: 8px;
+            border: none !important;
+        }
+    }
+    .data-layer-list-content {
+        flex: 1;
+        overflow: auto;
+    }
+}
