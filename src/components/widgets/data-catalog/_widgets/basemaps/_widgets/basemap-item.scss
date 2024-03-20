@@ -4,8 +4,13 @@
     border: 1px solid #ccc;
     padding: 5px;
     background-color: #fff;
+    cursor: pointer;
     .basemap-item-title {
         font-family: var(--app-font-family);
         font-size: 12px;
+    }
+    img {
+        margin-left: 5px;
+        height: 100%;
     }
 }
