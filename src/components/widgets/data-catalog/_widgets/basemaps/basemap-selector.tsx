@@ -1,18 +1,20 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { useAppContext } from '@src/contexts/app-context-provider';
 import Portal from '@arcgis/core/portal/Portal';
 import BasemapGalleryVM from '@arcgis/core/widgets/BasemapGallery/BasemapGalleryViewModel';
 import PortalBasemapsSource from '@arcgis/core/widgets/BasemapGallery/support/PortalBasemapsSource';
 import * as reactiveUtils from '@arcgis/core/core/reactiveUtils';
-import BasemapItem from './_widgets/basemap-item';
+import { CalcitePopover } from '@esri/calcite-components-react';
+
+import BasemapItem from './_widgets/basemap-item/basemap-item';
+import BasemapList from './_widgets/basemap-list/basemap-list';
 
 import { MODE, ENV } from '@src/utils/constants';
 import { getConfig } from '@src/config/config';
 
 import strings from './strings';
 import './basemap-selector.scss';
-
-// import { CalcitePanel, CalciteBlock } from '@esri/calcite-components-react';
 
 type BasemapSelectorProps = { context?: string };
 
@@ -40,7 +42,8 @@ const BaseMapSelector: React.FC<BasemapSelectorProps> = ({
                 const currentIndex = bmaps.findIndex((bmap: __esri.Basemap) =>
                     basemapGalleryVM.basemapEquals(currentBasemap, bmap)
                 );
-                if (!(currentIndex > -1) && currentBasemap) {
+
+                if (currentIndex === -1 && currentBasemap) {
                     (currentBasemap as any).selected = true;
                     bmaps.push(currentBasemap);
                 } else {
@@ -62,6 +65,16 @@ const BaseMapSelector: React.FC<BasemapSelectorProps> = ({
             .then((basemaps) => setBasemaps(basemaps));
     }, [view]);
 
+    const handleBasemapChangeRequested = (bmap: __esri.Basemap) => {
+        if (!(bmap as any).selected) {
+            const currentBmap = basemaps.find((bmap) => bmap.selected);
+            currentBmap.selected = false;
+            (bmap as any).selected = true;
+            setBasemaps([...basemaps]);
+        }
+        view.map.set('basemap', bmap);
+    };
+
     useEffect(() => {
         if (view) {
             view.when(() => {
@@ -73,11 +86,38 @@ const BaseMapSelector: React.FC<BasemapSelectorProps> = ({
 
     return (
         <div className='basemap-layer-list'>
+            {basemapGalleryVM.view &&
+                createPortal(
+                    <CalcitePopover
+                        label={strings.title}
+                        open={false}
+                        autoClose={false}
+                        focusTrapDisabled={true}
+                        triggerDisabled={false}
+                        placement='right'
+                        referenceElement={`selected-basemap-${context}`}
+                    >
+                        <BasemapList
+                            context={context}
+                            items={basemaps}
+                            onBasemapChangeRequested={
+                                handleBasemapChangeRequested
+                            }
+                        />
+                    </CalcitePopover>,
+                    basemapGalleryVM.view.container
+                )}
+
             <div className='basemap-layer-list-heading'>{strings.title}</div>
-            <BasemapItem
-                context={context}
-                item={basemaps.filter((bmap) => bmap.selected)[0]}
-            />
+            <div
+                id={`selected-basemap-${context}`}
+                className='selected-basemap'
+            >
+                <BasemapItem
+                    context={context}
+                    item={basemaps.filter((bmap) => bmap.selected)[0]}
+                />
+            </div>
         </div>
     );
 };

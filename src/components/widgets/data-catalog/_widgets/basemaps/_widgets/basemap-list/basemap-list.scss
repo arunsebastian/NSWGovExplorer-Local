@@ -1,0 +1,16 @@
+.basemap-list {
+    width: 300px;
+    overflow: hidden;
+    .basemap-list-item {
+        display: flex;
+        max-height: calc(100vh - 50px);
+        overflow: auto;
+        .basemap-item {
+            margin-bottom: 5px;
+        }
+        &.disabled {
+            pointer-events: none;
+            opacity: 0.7;
+        }
+    }
+}

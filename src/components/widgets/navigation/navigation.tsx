@@ -8,6 +8,12 @@ import PreviousNext from './_widgets/previous-next/previous-next';
 import Locate from './_widgets/locate/locate';
 import NorthArrow from './_widgets/compass/compass';
 import SwitchView from './_widgets/switch-view/switch-view';
+import {
+    CalciteButton,
+    CalcitePopover,
+    CalciteActionBar
+} from '@esri/calcite-components-react';
+
 import { MODE, TOOL } from '@src/utils/constants';
 import { getWidgetConfig } from '@src/config/config';
 import { syncMaps } from '@src/utils/map';
@@ -16,12 +22,6 @@ import { isMobileOrTablet } from '@src/utils/device';
 import strings from './strings';
 import styles from './dynamic-styles';
 import './navigation.scss';
-
-import {
-    CalciteButton,
-    CalcitePopover,
-    CalciteActionBar
-} from '@esri/calcite-components-react';
 
 type NavigationProps = {
     context?: string;
