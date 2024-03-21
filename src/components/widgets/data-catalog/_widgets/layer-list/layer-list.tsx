@@ -19,7 +19,7 @@ const LayerList: React.FC<LayerListProps> = ({
     context = MODE.MAP_VIEW,
     onLayerListClosed
 }: LayerListProps) => {
-    const { mapView, sceneView } = useAppContext();
+    const { mapView, sceneView, setLoading } = useAppContext();
     const layerListVM = useRef<LayerListVM>(new LayerListVM()).current;
     const containerRef = useRef<HTMLDivElement>();
     const layerListRendered = useRef<boolean>(false);
@@ -40,35 +40,48 @@ const LayerList: React.FC<LayerListProps> = ({
     };
 
     const renderLayerList = () => {
-        if (!islayerListRendered()) {
-            layerListVM.set('view', view);
-            const layerList = new ESRILayerList({
-                viewModel: layerListVM,
-                visibleElements: {
-                    closeButton: false,
-                    collapseButton: false,
-                    errors: true,
-                    // filter: false,
-                    heading: false,
-                    statusIndicators: true
-                },
-                //listItemCreatedFunction: defineActions,
-                dragEnabled: true,
-                collapsed: false,
-                container: containerRef.current
-            });
-            reactiveUtils
-                .whenOnce(() => (layerList as any).messages)
-                .then(() => {
-                    (layerList as any).messages
-                        ? ((layerList as any).messages.widgetLabel =
-                              strings.title)
-                        : null;
-                    layerList.set('label', strings.title);
+        setLoading(true);
+        layerListVM.set('view', view);
+        view.when(() => {
+            if (!islayerListRendered()) {
+                const layerList = new ESRILayerList({
+                    viewModel: layerListVM,
+                    visibleElements: {
+                        closeButton: false,
+                        collapseButton: false,
+                        errors: true,
+                        // filter: false,
+                        heading: false,
+                        statusIndicators: true
+                    },
+                    //listItemCreatedFunction: defineActions,
+                    dragEnabled: true,
+                    collapsed: false,
+                    container: containerRef.current
                 });
-            layerListRendered.current = true;
-        }
+                reactiveUtils
+                    .whenOnce(() => (layerList as any).messages)
+                    .then(() => {
+                        (layerList as any).messages
+                            ? ((layerList as any).messages.widgetLabel =
+                                  strings.title)
+                            : null;
+                        layerList.set('label', strings.title);
+                    });
+                reactiveUtils
+                    .whenOnce(() => layerListVM.state === 'ready')
+                    .then(() => {
+                        setLoading(false);
+                    });
+                layerListRendered.current = true;
+                setLoading(false);
+            }
+        });
     };
+
+    // const defineLayerItemActions = (
+    //     item: __esri.LayerListListItemCreatedHandler
+    // ) => {};
 
     useEffect(() => {
         if (view) {

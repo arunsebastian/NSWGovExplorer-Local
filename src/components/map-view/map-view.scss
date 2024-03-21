@@ -11,6 +11,10 @@
     &.active {
         display: initial;
     }
+    &.masked {
+        pointer-events: none;
+        opacity: 0.5;
+    }
     .map-view {
         position: absolute;
         width: 100%;

@@ -28,7 +28,7 @@ const MapView: React.FC<MapViewProps> = ({
     type = MODE.MAP_VIEW
 }: MapViewProps) => {
     const viewRef = useRef();
-    const { activeView, setMapView, setSceneView } = useAppContext();
+    const { activeView, loading, setMapView, setSceneView } = useAppContext();
 
     const MapType = type === MODE.SCENE_VIEW ? WebScene : WebMap;
     const ViewType = type === MODE.SCENE_VIEW ? View3D : View2D;
@@ -83,7 +83,8 @@ const MapView: React.FC<MapViewProps> = ({
     return (
         <div
             className={classNames('map-view-container', {
-                inactive: type !== activeView
+                inactive: type !== activeView,
+                masked: loading
             })}
         >
             <div ref={viewRef} className='map-view'></div>

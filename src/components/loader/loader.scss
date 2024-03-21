@@ -1,0 +1,17 @@
+.masked-loader {
+    position: absolute;
+    background-color: transparent;
+    --calcite-ui-background: transparent;
+    z-index: 9999;
+    height: 100%;
+    width: 100%;
+    flex-direction: column;
+    box-sizing: border-box;
+    .calci-loader {
+        top: 0px;
+        height: 100%;
+        padding: 0px;
+        display: flex;
+        align-items: center;
+    }
+}
