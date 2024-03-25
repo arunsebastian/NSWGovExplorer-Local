@@ -53,7 +53,9 @@ const LayerList: React.FC<LayerListProps> = ({
             if (!islayerListRendered()) {
                 const layerList = new ESRILayerList({
                     viewModel: layerListVM,
-                    listItemCreatedFunction: defineLayerItemActions,
+                    listItemCreatedFunction: (event: any) => {
+                        defineLayerItemActions(event, layerList);
+                    },
                     dragEnabled: true,
                     collapsed: false,
                     container: containerRef.current
@@ -69,36 +71,19 @@ const LayerList: React.FC<LayerListProps> = ({
         });
     };
 
-    const defineLayerItemActions = (event: any) => {
+    const defineLayerItemActions = (
+        event: any,
+        layerList: __esri.LayerList
+    ) => {
         const item = event.item;
         const type = item.layer?.type;
         const actionsSections = [] as any;
 
-        //remove action
-        const layerRemove =
-            ['group', 'feature', 'map-notes', 'tile', 'map-image'].indexOf(
-                type
-            ) > -1;
+        //################### Zoom To Layer Full Extent   ####################//
 
-        // zoom to
         const layerZoomTo =
             ['feature', 'map-notes', 'map-image', 'tile'].indexOf(type) > -1;
 
-        //opacity slider
-        const layerOpacitySlider =
-            ['feature', 'map-notes', 'map-image', 'tile', 'group'].indexOf(
-                type
-            ) > -1;
-
-        layerRemove &&
-            actionsSections.push([
-                {
-                    title: strings.removeLayer,
-                    icon: 'x',
-                    id: ACTION.REMOVE_LAYER,
-                    type: 'button'
-                }
-            ]);
         layerZoomTo &&
             actionsSections.push([
                 {
@@ -108,9 +93,12 @@ const LayerList: React.FC<LayerListProps> = ({
                 }
             ]);
 
-        if (layerRemove) {
-            // I AM HERE
-        }
+        //####################  Adjust Opacity Action ###############################//
+
+        const layerOpacitySlider =
+            ['feature', 'map-notes', 'map-image', 'tile', 'group'].indexOf(
+                type
+            ) > -1;
 
         if (layerOpacitySlider) {
             const slider = new Slider({
@@ -127,26 +115,97 @@ const LayerList: React.FC<LayerListProps> = ({
                 (values) => (item.layer.opacity = values[0])
             );
 
+            if (actionsSections.length > 0) {
+                // this is so that the opacity control falls in the menu
+                actionsSections.push([
+                    {
+                        title: strings.adjustOpacity,
+                        icon: 'sliders-horizontal',
+                        id: ACTION.OPACITY
+                    }
+                ]);
+            }
             item.panel = {
                 content: slider,
-                title: strings.adjustOpacity
+                title: strings.adjustOpacity,
+                icon: 'sliders-horizontal',
+                id: ACTION.OPACITY,
+                visible:
+                    actionsSections.findIndex(
+                        (section: any) =>
+                            section.findIndex(
+                                (sec: any) => sec.id === ACTION.OPACITY
+                            ) > -1
+                    ) === -1
             };
-            actionsSections.push([
-                {
-                    title: strings.adjustOpacity,
-                    icon: 'sliders-horizontal',
-                    id: ACTION.OPACITY
-                }
-            ]);
         }
+
+        //##################### Remove Layer Action#####################################//
+
+        //
+        const layerRemove =
+            ['group', 'feature', 'map-notes', 'tile', 'map-image'].indexOf(
+                type
+            ) > -1;
+
+        if (layerRemove) {
+            layerList.when(() => {
+                deferredRenderActionLayerRemove(item, layerList);
+            });
+        }
+
+        //####################################################################//
+
         item.actionsSections = actionsSections;
     };
 
     const handleTriggerAction = (event: __esri.LayerListTriggerActionEvent) => {
         const { action, item } = event;
         if (action.id === ACTION.OPACITY) {
-            // item.open = !item.open;
-            item.panel.open = !item.panel.open;
+            const currentState = item.panel.open;
+            item.panel.open = !currentState;
+            item.panel.visible = !currentState;
+        }
+    };
+
+    const deferredRenderActionLayerRemove = (
+        item: any,
+        layerList: __esri.LayerList
+    ) => {
+        const node = (layerList.container as HTMLElement).querySelector(
+            `calcite-list-item[title='${item.title}']`
+        );
+
+        let removeLayerAction = node.querySelector(
+            `calcite-action[id='${item.layer.id}']`
+        ) as HTMLCalciteActionElement;
+
+        if (!removeLayerAction) {
+            removeLayerAction = document.createElement('calcite-action');
+            removeLayerAction.icon = 'x';
+            removeLayerAction.slot = 'actions-end';
+            removeLayerAction.appearance = 'transparent';
+            removeLayerAction.scale = 's';
+            removeLayerAction.id = `${item.layer.id}`;
+            removeLayerAction.title = strings.removeLayer;
+            removeLayerAction.addEventListener('click', () => {
+                node.removeChild(removeLayerAction);
+                const removableLayer = view.map.layers.find(
+                    (layer) => layer.id === item.layer.id
+                );
+                if (removableLayer) {
+                    view.map.remove(removableLayer);
+                } else {
+                    item.layer.parent.remove(item.layer);
+                }
+            });
+            node.insertBefore(
+                removeLayerAction,
+                (node.lastChild as HTMLElement).tagName.toLowerCase() ===
+                    'calcite-action-menu'
+                    ? node.lastChild
+                    : node.lastChild.nextSibling
+            );
         }
     };
 
