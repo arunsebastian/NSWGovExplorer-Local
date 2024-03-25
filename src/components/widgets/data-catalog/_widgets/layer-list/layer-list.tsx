@@ -80,6 +80,8 @@ const LayerList: React.FC<LayerListProps> = ({
         const actionsSections = [] as any;
 
         //################### Zoom To Layer Full Extent   ####################//
+        /*
+                            ----Temporarily disabling----
 
         const layerZoomTo =
             ['feature', 'map-notes', 'map-image', 'tile'].indexOf(type) > -1;
@@ -92,6 +94,7 @@ const LayerList: React.FC<LayerListProps> = ({
                     id: ACTION.ZOOM_EXTENT
                 }
             ]);
+        */
 
         //####################  Adjust Opacity Action ###############################//
 
