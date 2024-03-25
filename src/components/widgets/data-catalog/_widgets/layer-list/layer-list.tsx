@@ -165,6 +165,8 @@ const LayerList: React.FC<LayerListProps> = ({
             const currentState = item.panel.open;
             item.panel.open = !currentState;
             item.panel.visible = !currentState;
+        } else if (action.id === ACTION.ZOOM_EXTENT) {
+            //console.log(item);
         }
     };
 
