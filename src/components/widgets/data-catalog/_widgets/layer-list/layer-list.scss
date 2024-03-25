@@ -35,12 +35,6 @@
     calcite-list-item {
         //hide the action button for opacity permanently so that the action
         // button for the opacity in the menu is not duplicated
-        // :not('.esri-list-item-panel')):has(calcite-action-menu) {
-        //     > calcite-action:is([title*='opacity'i], [title*='transparency'i]) {
-        //         display: none;
-        //     }
-        // }
-
         :not(:has(div.esri-list-item-panel)) {
             &:has(calcite-action-menu)
                 > calcite-action:is(
