@@ -4,6 +4,7 @@ import { useAppContext } from '@src/contexts/app-context-provider';
 import { MODE } from '@src/utils/constants';
 import ESRILayerList from '@arcgis/core/widgets/LayerList';
 import LayerListVM from '@arcgis/core/widgets/LayerList/LayerListViewModel';
+import Slider from '@arcgis/core/widgets/Slider';
 import * as reactiveUtils from '@arcgis/core/core/reactiveUtils';
 import { CalciteLabel, CalciteButton } from '@esri/calcite-components-react';
 
@@ -14,6 +15,12 @@ type LayerListProps = {
     context?: string;
     onLayerListClosed?: () => void;
 };
+
+enum ACTION {
+    OPACITY = 'adjust-opacity',
+    ZOOM_EXTENT = 'zoom-to',
+    REMOVE_LAYER = 'remove-layer'
+}
 
 const LayerList: React.FC<LayerListProps> = ({
     context = MODE.MAP_VIEW,
@@ -46,42 +53,102 @@ const LayerList: React.FC<LayerListProps> = ({
             if (!islayerListRendered()) {
                 const layerList = new ESRILayerList({
                     viewModel: layerListVM,
-                    visibleElements: {
-                        closeButton: false,
-                        collapseButton: false,
-                        errors: true,
-                        // filter: false,
-                        heading: false,
-                        statusIndicators: true
-                    },
-                    //listItemCreatedFunction: defineActions,
+                    listItemCreatedFunction: defineLayerItemActions,
                     dragEnabled: true,
                     collapsed: false,
                     container: containerRef.current
                 });
-                reactiveUtils
-                    .whenOnce(() => (layerList as any).messages)
-                    .then(() => {
-                        (layerList as any).messages
-                            ? ((layerList as any).messages.widgetLabel =
-                                  strings.title)
-                            : null;
-                        layerList.set('label', strings.title);
-                    });
-                reactiveUtils
-                    .whenOnce(() => layerListVM.state === 'ready')
-                    .then(() => {
-                        setLoading(false);
-                    });
+                layerList.when(() => {
+                    layerListRendered.current = true;
+                    layerList.set('label', strings.title);
+                    setLoading(false);
+                });
+                layerList.on('trigger-action', handleTriggerAction);
                 layerListRendered.current = true;
-                setLoading(false);
             }
         });
     };
 
-    // const defineLayerItemActions = (
-    //     item: __esri.LayerListListItemCreatedHandler
-    // ) => {};
+    const defineLayerItemActions = (event: any) => {
+        const item = event.item;
+        const type = item.layer?.type;
+        const actionsSections = [] as any;
+
+        //remove action
+        const layerRemove =
+            ['group', 'feature', 'map-notes', 'tile', 'map-image'].indexOf(
+                type
+            ) > -1;
+
+        // zoom to
+        const layerZoomTo =
+            ['feature', 'map-notes', 'map-image', 'tile'].indexOf(type) > -1;
+
+        //opacity slider
+        const layerOpacitySlider =
+            ['feature', 'map-notes', 'map-image', 'tile', 'group'].indexOf(
+                type
+            ) > -1;
+
+        layerRemove &&
+            actionsSections.push([
+                {
+                    title: strings.removeLayer,
+                    icon: 'x',
+                    id: ACTION.REMOVE_LAYER,
+                    type: 'button'
+                }
+            ]);
+        layerZoomTo &&
+            actionsSections.push([
+                {
+                    title: strings.zoomToExtent,
+                    icon: 'extent',
+                    id: ACTION.ZOOM_EXTENT
+                }
+            ]);
+
+        if (layerRemove) {
+            // I AM HERE
+        }
+
+        if (layerOpacitySlider) {
+            const slider = new Slider({
+                min: 0,
+                max: 1,
+                steps: 0.05,
+                values: [item.layer.opacity],
+                snapOnClickEnabled: true,
+                visibleElements: { labels: true, rangeLabels: true }
+            });
+            // Watch the slider's values array and update the layer's opacity
+            reactiveUtils.watch(
+                () => slider.values.map((value) => value),
+                (values) => (item.layer.opacity = values[0])
+            );
+
+            item.panel = {
+                content: slider,
+                title: strings.adjustOpacity
+            };
+            actionsSections.push([
+                {
+                    title: strings.adjustOpacity,
+                    icon: 'sliders-horizontal',
+                    id: ACTION.OPACITY
+                }
+            ]);
+        }
+        item.actionsSections = actionsSections;
+    };
+
+    const handleTriggerAction = (event: __esri.LayerListTriggerActionEvent) => {
+        const { action, item } = event;
+        if (action.id === ACTION.OPACITY) {
+            // item.open = !item.open;
+            item.panel.open = !item.panel.open;
+        }
+    };
 
     useEffect(() => {
         if (view) {

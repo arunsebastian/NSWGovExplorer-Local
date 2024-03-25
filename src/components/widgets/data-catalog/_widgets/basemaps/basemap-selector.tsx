@@ -28,7 +28,7 @@ const BaseMapSelector: React.FC<BasemapSelectorProps> = ({
     const view = context === MODE.SCENE_VIEW ? sceneView : mapView;
 
     const fetchBasemaps = useCallback(async () => {
-        const config = getConfig(ENV.DEV);
+        const config = getConfig(ENV.AGOL);
         const groupIdentifier =
             context === MODE.SCENE_VIEW
                 ? config.portalInfo.basemapGroup3d
