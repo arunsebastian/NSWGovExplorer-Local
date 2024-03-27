@@ -15,6 +15,7 @@
                 font-family: var(--app-font-family);
             }
         }
+        overflow: hidden;
         background: transparent;
     }
     .esri-expand__container--expanded {
@@ -23,7 +24,7 @@
         display: flex;
         border-radius: 6px;
         height: calc(100vh - 15px);
-        overflow-y: auto;
+        overflow: hidden;
         .esri-expand__panel {
             max-height: 70px;
         }
@@ -31,6 +32,7 @@
             margin: 0px;
             background-color: #fff;
             box-shadow: none;
+            overflow: auto;
         }
         .esri-widget__heading {
             display: none;

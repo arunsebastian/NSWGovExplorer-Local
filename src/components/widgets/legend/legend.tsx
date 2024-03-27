@@ -17,12 +17,7 @@ const Legend: React.FC<LegendProps> = ({
 }: LegendProps) => {
     const { mapView, sceneView } = useAppContext();
     const containerRef = useRef<HTMLDivElement>();
-    const legendRendered = useRef<boolean>(false);
     const view = context === MODE.SCENE_VIEW ? sceneView : mapView;
-
-    const isLegendRendered = () => {
-        return legendRendered.current;
-    };
 
     const purgeContainer = () => {
         const children: Array<HTMLElement> = Array.prototype.slice.call(
@@ -35,23 +30,20 @@ const Legend: React.FC<LegendProps> = ({
     };
 
     const renderLegend = () => {
-        if (!isLegendRendered()) {
-            const legendNode = document.createElement('div');
-            legendNode.setAttribute('class', 'legend-container');
-            const legend = new ESRILegend({
-                view: view,
-                container: legendNode,
-                hideLayersNotInCurrentView: true
-            });
-            new Expand({
-                expandIcon: 'legend',
-                content: legend,
-                label: strings.legend,
-                expandTooltip: strings.legend,
-                container: containerRef.current
-            });
-            legendRendered.current = true;
-        }
+        const legendNode = document.createElement('div');
+        legendNode.setAttribute('class', 'legend-container');
+        const legend = new ESRILegend({
+            view: view,
+            container: legendNode,
+            hideLayersNotInCurrentView: true
+        });
+        new Expand({
+            expandIcon: 'legend',
+            content: legend,
+            label: strings.legend,
+            expandTooltip: strings.legend,
+            container: containerRef.current
+        });
     };
 
     const applyCustomStyles = () => {

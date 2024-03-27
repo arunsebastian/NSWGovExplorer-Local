@@ -92,7 +92,7 @@ const MapView: React.FC<MapViewProps> = ({
                 }
             });
             map.addMany(layers.filter((layer) => layer));
-            await map.loadAll();
+            map.loadAll();
 
             const view = new ViewType({
                 container: viewRef.current,

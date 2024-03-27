@@ -30,7 +30,7 @@ const App: React.FC = () => {
         <div className='app-content'>
             <div ref={appRef} className='app-view'>
                 <MapView type={MODE.MAP_VIEW}></MapView>
-                {/* <MapView type={MODE.SCENE_VIEW}></MapView> */}
+                <MapView type={MODE.SCENE_VIEW}></MapView>
             </div>
             <Loader />
         </div>

@@ -21,12 +21,7 @@ const DataCatalog: React.FC<DataCatalogProps> = ({
     const containerRef = useRef<HTMLDivElement>();
     const dataCatalogRef = useRef<__esri.Expand>();
     const [catalogRendered, setCatalogRendered] = useState<boolean>(false);
-
     const view = context === MODE.SCENE_VIEW ? sceneView : mapView;
-
-    const isDataCatalogRendered = () => {
-        return catalogRendered;
-    };
 
     const purgeContainer = () => {
         const children: Array<HTMLElement> = Array.prototype.slice.call(
@@ -39,21 +34,19 @@ const DataCatalog: React.FC<DataCatalogProps> = ({
     };
 
     const renderDataCatalog = () => {
-        if (!isDataCatalogRendered()) {
-            const contentNode = document.createElement('div');
-            contentNode.setAttribute('class', 'data-catalog-wrapper');
+        const contentNode = document.createElement('div');
+        contentNode.setAttribute('class', 'data-catalog-wrapper');
 
-            (dataCatalogRef as any).current = new Expand({
-                expandIcon: 'layers',
-                collapseIcon: 'layers',
-                content: contentNode,
-                label: strings.title,
-                expandTooltip: strings.title,
-                collapseTooltip: strings.title,
-                container: containerRef.current
-            });
-            setCatalogRendered(true);
-        }
+        (dataCatalogRef as any).current = new Expand({
+            expandIcon: 'layers',
+            collapseIcon: 'layers',
+            content: contentNode,
+            label: strings.title,
+            expandTooltip: strings.title,
+            collapseTooltip: strings.title,
+            container: containerRef.current
+        });
+        setCatalogRendered(true);
     };
 
     const closeDataCatalog = () => {
