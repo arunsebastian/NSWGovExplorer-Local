@@ -48,8 +48,8 @@ const LayerList: React.FC<LayerListProps> = ({
 
     const renderLayerList = () => {
         if (activeView === context) setLoading(true);
-        layerListVM.set('view', view);
         view.when(() => {
+            layerListVM.set('view', view);
             if (!islayerListRendered()) {
                 const layerList = new ESRILayerList({
                     viewModel: layerListVM,
@@ -177,7 +177,7 @@ const LayerList: React.FC<LayerListProps> = ({
         layerList: __esri.LayerList
     ) => {
         const node = (layerList.container as HTMLElement).querySelector(
-            `calcite-list-item[title='${item.title}']`
+            `calcite-list-item[title*='${item.title}']`
         );
 
         let removeLayerAction = node.querySelector(

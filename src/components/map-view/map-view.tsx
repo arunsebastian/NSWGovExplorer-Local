@@ -54,26 +54,27 @@ const MapView: React.FC<MapViewProps> = ({
                 layers = await Promise.all(
                     layerIdentifiers.map((item: string) => {
                         item = decodeURI(item);
-
                         if (isPortalItemId(item)) {
                             return Layer.fromPortalItem({
                                 portalItem: {
                                     id: item
                                 }
-                            } as __esri.LayerFromPortalItemParams);
+                            } as __esri.LayerFromPortalItemParams).catch(
+                                () => null
+                            );
                         } else if (isRestServiceUrl(item)) {
-                            if (
-                                item.toLocaleLowerCase().includes('mapserver')
-                            ) {
+                            if (item.toLowerCase().includes('mapserver')) {
                                 return new MapImageLayer({
                                     url: item
-                                }).load();
+                                })
+                                    .load()
+                                    .catch(() => null);
                             } else if (
-                                item
-                                    .toLocaleLowerCase()
-                                    .includes('featureserver')
+                                item.toLowerCase().includes('featureserver')
                             ) {
-                                return new FeatureLayer({ url: item }).load();
+                                return new FeatureLayer({ url: item })
+                                    .load()
+                                    .catch(() => null);
                             }
                         }
                     })
@@ -90,7 +91,8 @@ const MapView: React.FC<MapViewProps> = ({
                     }
                 }
             });
-            map.addMany(layers);
+            map.addMany(layers.filter((layer) => layer));
+            await map.loadAll();
 
             const view = new ViewType({
                 container: viewRef.current,
