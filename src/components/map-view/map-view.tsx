@@ -91,7 +91,6 @@ const MapView: React.FC<MapViewProps> = ({
                 }
             });
             map.addMany(layers);
-            map.loadAll();
 
             const view = new ViewType({
                 container: viewRef.current,
@@ -116,6 +115,7 @@ const MapView: React.FC<MapViewProps> = ({
             view.ui.add(scaleBar, {
                 position: 'bottom-left'
             });
+
             SetViewFunc(view);
         }
     };

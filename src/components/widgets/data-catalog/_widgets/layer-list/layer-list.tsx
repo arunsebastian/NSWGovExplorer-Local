@@ -54,7 +54,7 @@ const LayerList: React.FC<LayerListProps> = ({
                 const layerList = new ESRILayerList({
                     viewModel: layerListVM,
                     listItemCreatedFunction: (event: any) => {
-                        //defineLayerItemActions(event, layerList);
+                        defineLayerItemActions(event, layerList);
                     },
                     dragEnabled: true,
                     collapsed: false,
