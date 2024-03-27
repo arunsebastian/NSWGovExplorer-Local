@@ -191,3 +191,15 @@ export const syncMaps = (
                   });
     }
 };
+
+export const isPortalItemId = (id: string) => {
+    return /^\d*[a-zA-Z][a-zA-Z\d]*$/.test(id);
+};
+
+export const isPortalUrl = (url: string) => {
+    // return /^\d*[a-zA-Z][a-zA-Z\d]*$/.test(id);
+};
+
+export const isRestServiceUrl = (url: string) => {
+    return url.includes('/arcgis/rest/services');
+};

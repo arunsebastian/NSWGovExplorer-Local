@@ -4,18 +4,21 @@ import { default as View3D } from '@arcgis/core/views/SceneView';
 import WebMap from '@arcgis/core/WebMap';
 import WebScene from '@arcgis/core/WebScene';
 import ScaleBar from '@arcgis/core/widgets/ScaleBar';
+import Layer from '@arcgis/core/layers/Layer';
+import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
+import MapImageLayer from '@arcgis/core/layers/MapImageLayer';
 import classNames from 'classnames';
 
 import MapToolbar from '../map-toolbar/map-toolbar';
 import Navigation from '../widgets/navigation/navigation';
 import Legend from '../widgets/legend/legend';
 import DataCatalog from '../widgets/data-catalog/data-catalog';
-// import OOTB from '../widgets/basemaps/ootb';
-// import BasemapSelector from '../widgets/basemaps/basemap-selector';
 
 import { ENV, MODE } from '@src/utils/constants';
 
 import { getConfig } from '@src/config/config';
+import { parseURL } from '@src/utils/url';
+import { isPortalItemId, isRestServiceUrl } from '@src/utils/map';
 import { useAppContext } from '@src/contexts/app-context-provider';
 
 import './map-view.scss';
@@ -28,15 +31,54 @@ const MapView: React.FC<MapViewProps> = ({
     type = MODE.MAP_VIEW
 }: MapViewProps) => {
     const viewRef = useRef();
-    const { activeView, loading, setMapView, setSceneView } = useAppContext();
+    const {
+        activeView,
+        loading,
+        mapView,
+        setMapView,
+        sceneView,
+        setSceneView
+    } = useAppContext();
 
     const MapType = type === MODE.SCENE_VIEW ? WebScene : WebMap;
     const ViewType = type === MODE.SCENE_VIEW ? View3D : View2D;
     const SetViewFunc = type === MODE.SCENE_VIEW ? setSceneView : setMapView;
 
-    const renderMap = () => {
+    const renderMap = async () => {
         const config = getConfig(ENV.AGOL).portalInfo;
+        let layers = [];
         if (config) {
+            const urlLayerParams: string = parseURL('layers');
+            if (urlLayerParams?.length > 0 && type === MODE.MAP_VIEW) {
+                const layerIdentifiers = urlLayerParams.split(',');
+                layers = await Promise.all(
+                    layerIdentifiers.map((item: string) => {
+                        item = decodeURI(item);
+
+                        if (isPortalItemId(item)) {
+                            return Layer.fromPortalItem({
+                                portalItem: {
+                                    id: item
+                                }
+                            } as __esri.LayerFromPortalItemParams);
+                        } else if (isRestServiceUrl(item)) {
+                            if (
+                                item.toLocaleLowerCase().includes('mapserver')
+                            ) {
+                                return new MapImageLayer({
+                                    url: item
+                                }).load();
+                            } else if (
+                                item
+                                    .toLocaleLowerCase()
+                                    .includes('featureserver')
+                            ) {
+                                return new FeatureLayer({ url: item }).load();
+                            }
+                        }
+                    })
+                );
+            }
             const map = new MapType({
                 portalItem: {
                     id:
@@ -48,7 +90,9 @@ const MapView: React.FC<MapViewProps> = ({
                     }
                 }
             });
+            map.addMany(layers);
             map.loadAll();
+
             const view = new ViewType({
                 container: viewRef.current,
                 map: map,
@@ -77,7 +121,8 @@ const MapView: React.FC<MapViewProps> = ({
     };
 
     useEffect(() => {
-        viewRef.current && renderMap();
+        if (type === MODE.SCENE_VIEW ? !sceneView : !mapView)
+            viewRef.current && renderMap();
     }, [viewRef.current]);
 
     return (
@@ -94,8 +139,6 @@ const MapView: React.FC<MapViewProps> = ({
             <MapToolbar position='right' stack='horizontal'>
                 <DataCatalog context={type}></DataCatalog>
                 <Legend context={type}></Legend>
-                {/* <OOTB context={type}></OOTB>
-                <BasemapSelector context={type}></BasemapSelector> */}
             </MapToolbar>
         </div>
     );

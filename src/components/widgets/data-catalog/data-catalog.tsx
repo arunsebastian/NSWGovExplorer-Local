@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useAppContext } from '@src/contexts/app-context-provider';
 import Expand from '@arcgis/core/widgets/Expand';
@@ -20,11 +20,12 @@ const DataCatalog: React.FC<DataCatalogProps> = ({
     const { mapView, sceneView } = useAppContext();
     const containerRef = useRef<HTMLDivElement>();
     const dataCatalogRef = useRef<__esri.Expand>();
+    const [catalogRendered, setCatalogRendered] = useState<boolean>(false);
 
     const view = context === MODE.SCENE_VIEW ? sceneView : mapView;
 
     const isDataCatalogRendered = () => {
-        return dataCatalogRef.current?.content ? true : false;
+        return catalogRendered;
     };
 
     const purgeContainer = () => {
@@ -37,12 +38,12 @@ const DataCatalog: React.FC<DataCatalogProps> = ({
         containerRef.current.innerHTML = '';
     };
 
-    const contentNode = document.createElement('div');
-    contentNode.setAttribute('class', 'data-catalog-wrapper');
-
     const renderDataCatalog = () => {
         if (!isDataCatalogRendered()) {
-            dataCatalogRef.current = new Expand({
+            const contentNode = document.createElement('div');
+            contentNode.setAttribute('class', 'data-catalog-wrapper');
+
+            (dataCatalogRef as any).current = new Expand({
                 expandIcon: 'layers',
                 collapseIcon: 'layers',
                 content: contentNode,
@@ -51,11 +52,12 @@ const DataCatalog: React.FC<DataCatalogProps> = ({
                 collapseTooltip: strings.title,
                 container: containerRef.current
             });
+            setCatalogRendered(true);
         }
     };
 
     const closeDataCatalog = () => {
-        dataCatalogRef.current?.collapse();
+        (dataCatalogRef as any).current?.collapse();
     };
 
     useEffect(() => {
@@ -68,7 +70,7 @@ const DataCatalog: React.FC<DataCatalogProps> = ({
     return (
         <>
             <div className='data-catalog-trigger' ref={containerRef}></div>
-            {dataCatalogRef.current?.content &&
+            {catalogRendered &&
                 createPortal(
                     <div className='data-catalog-content'>
                         <LayerList
@@ -77,7 +79,7 @@ const DataCatalog: React.FC<DataCatalogProps> = ({
                         />
                         <BaseMapSelector context={context} />
                     </div>,
-                    dataCatalogRef.current.content as HTMLElement
+                    (dataCatalogRef as any).current.content as HTMLElement
                 )}
         </>
     );
