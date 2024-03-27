@@ -7,6 +7,7 @@ import ScaleBar from '@arcgis/core/widgets/ScaleBar';
 import Layer from '@arcgis/core/layers/Layer';
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 import MapImageLayer from '@arcgis/core/layers/MapImageLayer';
+import * as reactiveUtils from '@arcgis/core/core/reactiveUtils';
 import classNames from 'classnames';
 
 import MapToolbar from '../map-toolbar/map-toolbar';
@@ -51,7 +52,7 @@ const MapView: React.FC<MapViewProps> = ({
         if (config) {
             setLoading(true);
             const urlLayerParams: string = parseURL('layers');
-            if (urlLayerParams?.length > 0 && type === MODE.MAP_VIEW) {
+            if (urlLayerParams?.length > 0) {
                 const layerIdentifiers = urlLayerParams.split(',');
                 layers = await Promise.all(
                     layerIdentifiers.map((item: string) => {
@@ -122,7 +123,17 @@ const MapView: React.FC<MapViewProps> = ({
             });
 
             SetViewFunc(view);
-            view.when(() => setLoading(false));
+            view.when(() => {
+                if (view.stationary) {
+                    setLoading(false);
+                } else {
+                    reactiveUtils
+                        .whenOnce(() => view.stationary)
+                        .then(() => {
+                            setLoading(false);
+                        });
+                }
+            });
         }
     };
 

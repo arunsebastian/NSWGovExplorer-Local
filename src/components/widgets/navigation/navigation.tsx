@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import { useAppContext } from '@src/contexts/app-context-provider';
+import * as reactiveUtils from '@arcgis/core/core/reactiveUtils';
 
 import PanRotate from './_widgets/pan-rotate/pan-rotate';
 import Zoom from './_widgets/zoom/zoom';
@@ -138,7 +139,15 @@ const Navigation: React.FC<NavigationProps> = ({
         const source = activeView === MODE.MAP_VIEW ? sceneView : mapView;
         const target = activeView === MODE.MAP_VIEW ? mapView : sceneView;
         await syncMaps(source, target);
-        setLoading(false);
+        if (target.stationary) {
+            setLoading(false);
+        } else {
+            reactiveUtils
+                .whenOnce(() => target.stationary)
+                .then(() => {
+                    setLoading(false);
+                });
+        }
     };
 
     useEffect(() => {

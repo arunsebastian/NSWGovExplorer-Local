@@ -183,12 +183,9 @@ export const syncMaps = async (
 ) => {
     if (target) {
         target.ready
-            ? target.goTo(source.viewpoint)
-            : await reactiveUtils
-                  .whenOnce(() => target.ready)
-                  .then(async () => {
-                      await target.goTo(source.viewpoint);
-                  });
+            ? await target.goTo(source.viewpoint)
+            : (await reactiveUtils.whenOnce(() => target.ready),
+              await target.goTo(source.viewpoint));
     }
 };
 
