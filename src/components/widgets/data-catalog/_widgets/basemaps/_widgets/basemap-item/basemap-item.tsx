@@ -5,14 +5,14 @@ const noPreviewImg = require('@assets/images/no-preview.png');
 import './basemap-item.scss';
 
 type BasemapItemProps = {
-    context?: string;
+    view: __esri.MapView | __esri.SceneView;
     item: __esri.Basemap;
     onBasemapItemClicked?: (item: __esri.Basemap) => void;
 };
 
 const BasemapItem: React.FC<BasemapItemProps> = ({
     item,
-    context,
+    view,
     onBasemapItemClicked
 }: BasemapItemProps) => {
     const handleBasemapItemClicked = () => {

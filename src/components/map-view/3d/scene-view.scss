@@ -1,0 +1,23 @@
+.scene-view-container {
+    flex: 1;
+    min-width: 50%;
+    height: 100%;
+    position: relative;
+    padding: 2px;
+    box-sizing: border-box;
+    &.inactive {
+        display: none;
+    }
+    &.active {
+        display: initial;
+    }
+    &.masked {
+        pointer-events: none;
+        opacity: 0.5;
+    }
+    .scene-view {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+    }
+}

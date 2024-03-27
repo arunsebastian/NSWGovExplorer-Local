@@ -24,7 +24,7 @@ import styles from './dynamic-styles';
 import './navigation.scss';
 
 type NavigationProps = {
-    context?: string;
+    view: __esri.MapView | __esri.SceneView;
 };
 
 enum PIN_STATUS {
@@ -32,15 +32,12 @@ enum PIN_STATUS {
     UNPIN = 'unpin'
 }
 
-const Navigation: React.FC<NavigationProps> = ({
-    context = MODE.MAP_VIEW
-}: NavigationProps) => {
+const Navigation: React.FC<NavigationProps> = ({ view }: NavigationProps) => {
     const { mapView, sceneView } = useAppContext();
     const navRef = useRef<HTMLCalciteButtonElement>();
     const toolsDisplayTimerRef = useRef<any>();
     const popOverRef = useRef<HTMLCalcitePopoverElement>();
     const pinStatusRef = useRef<string>(PIN_STATUS.UNPIN);
-    const view = context === MODE.SCENE_VIEW ? sceneView : mapView;
     const config = getWidgetConfig(TOOL.NAVIGATION);
 
     const handlePointerLeaveOnTriggerBtn = () => {
@@ -142,77 +139,63 @@ const Navigation: React.FC<NavigationProps> = ({
     useEffect(() => {
         view && navRef.current
             ? (navRef.current.removeAttribute('disabled'), applyCustomStyles())
-            : navRef.current.setAttribute('disabled', 'true');
-    }, [view]);
+            : navRef.current && navRef.current.setAttribute('disabled', 'true');
+    }, [view, navRef.current]);
 
     return (
         <>
-            <CalcitePopover
-                label={strings.navigation}
-                ref={popOverRef}
-                open={false}
-                autoClose={false}
-                focusTrapDisabled={true}
-                triggerDisabled={true}
-                placement='top'
-                referenceElement={`nav-trigger-${context}`}
-                onPointerLeave={handlePointerLeaveOnTriggerBtn}
-            >
-                <CalciteActionBar
-                    layout='horizontal'
-                    className='nav-bar'
-                    expandDisabled={true}
-                >
-                    {sceneView && mapView && (
-                        <SwitchView
-                            view={
-                                context === MODE.SCENE_VIEW
-                                    ? sceneView
-                                    : mapView
-                            }
-                            onTrigger={onViewSwitch}
-                        />
-                    )}
-                    {context === MODE.SCENE_VIEW && (
-                        <PanRotate
-                            view={
-                                context === MODE.SCENE_VIEW
-                                    ? sceneView
-                                    : mapView
-                            }
-                        />
-                    )}
-                    <Zoom
-                        view={context === MODE.SCENE_VIEW ? sceneView : mapView}
-                    />
-                    <Home
-                        view={context === MODE.SCENE_VIEW ? sceneView : mapView}
-                    />
-                    {/* <PreviousNext
-                        view={context === MODE.SCENE_VIEW ? sceneView : mapView}
+            {view && (
+                <>
+                    <CalcitePopover
+                        label={strings.navigation}
+                        ref={popOverRef}
+                        open={false}
+                        autoClose={false}
+                        focusTrapDisabled={true}
+                        triggerDisabled={true}
+                        placement='top'
+                        referenceElement={`nav-trigger-${view.type}`}
+                        onPointerLeave={handlePointerLeaveOnTriggerBtn}
+                    >
+                        <CalciteActionBar
+                            layout='horizontal'
+                            className='nav-bar'
+                            expandDisabled={true}
+                        >
+                            {sceneView && mapView && (
+                                <SwitchView
+                                    view={view}
+                                    onTrigger={onViewSwitch}
+                                />
+                            )}
+                            {view.type === MODE.SCENE_VIEW && (
+                                <PanRotate view={view} />
+                            )}
+                            <Zoom view={view} />
+                            <Home view={view} />
+                            {/* <PreviousNext
+                        view={view}
                     /> */}
-                    <Locate
-                        view={context === MODE.SCENE_VIEW ? sceneView : mapView}
-                    />
-                    <NorthArrow
-                        view={context === MODE.SCENE_VIEW ? sceneView : mapView}
-                    />
-                </CalciteActionBar>
-            </CalcitePopover>
-            <CalciteButton
-                id={`nav-trigger-${context}`}
-                title={strings.navigation}
-                label={strings.navigation}
-                iconStart={PIN_STATUS.UNPIN}
-                ref={navRef}
-                kind='neutral'
-                className='nav-trigger'
-                onPointerEnter={handlePointerEnterOnTriggerBtn}
-                onPointerLeave={handlePointerLeaveOnTriggerBtn}
-                onClick={handleClickOnTriggerBtn}
-            >
-                {strings.navigation}
-            </CalciteButton>
+                            <Locate view={view} />
+                            <NorthArrow view={view} />
+                        </CalciteActionBar>
+                    </CalcitePopover>
+                    <CalciteButton
+                        id={`nav-trigger-${view.type}`}
+                        title={strings.navigation}
+                        label={strings.navigation}
+                        iconStart={PIN_STATUS.UNPIN}
+                        ref={navRef}
+                        kind='neutral'
+                        className='nav-trigger'
+                        onPointerEnter={handlePointerEnterOnTriggerBtn}
+                        onPointerLeave={handlePointerLeaveOnTriggerBtn}
+                        onClick={handleClickOnTriggerBtn}
+                    >
+                        {strings.navigation}
+                    </CalciteButton>
+                </>
+            )}
         </>
     );
 };

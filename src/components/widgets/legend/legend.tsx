@@ -1,7 +1,4 @@
 import React, { useRef, useEffect } from 'react';
-import { useAppContext } from '@src/contexts/app-context-provider';
-
-import { MODE } from '@src/utils/constants';
 import ESRILegend from '@arcgis/core/widgets/Legend';
 import Expand from '@arcgis/core/widgets/Expand';
 
@@ -9,16 +6,12 @@ import strings from './strings';
 import './legend.scss';
 
 type LegendProps = {
-    context?: string;
+    view: __esri.MapView | __esri.SceneView;
 };
 
-const Legend: React.FC<LegendProps> = ({
-    context = MODE.MAP_VIEW
-}: LegendProps) => {
-    const { mapView, sceneView } = useAppContext();
+const Legend: React.FC<LegendProps> = ({ view }: LegendProps) => {
     const containerRef = useRef<HTMLDivElement>();
     const legendRendered = useRef<boolean>(false);
-    const view = context === MODE.SCENE_VIEW ? sceneView : mapView;
 
     const isLegendRendered = () => {
         return legendRendered.current;

@@ -1,7 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import { useAppContext } from '@src/contexts/app-context-provider';
 
-import { MODE } from '@src/utils/constants';
 import ESRILayerList from '@arcgis/core/widgets/LayerList';
 import LayerListVM from '@arcgis/core/widgets/LayerList/LayerListViewModel';
 import Slider from '@arcgis/core/widgets/Slider';
@@ -12,7 +11,7 @@ import strings from './strings';
 import './layer-list.scss';
 
 type LayerListProps = {
-    context?: string;
+    view: __esri.MapView | __esri.SceneView;
     onLayerListClosed?: () => void;
 };
 
@@ -23,14 +22,13 @@ enum ACTION {
 }
 
 const LayerList: React.FC<LayerListProps> = ({
-    context = MODE.MAP_VIEW,
+    view,
     onLayerListClosed
 }: LayerListProps) => {
-    const { activeView, mapView, sceneView, setLoading } = useAppContext();
+    const { activeView, setLoading } = useAppContext();
     const layerListVM = useRef<LayerListVM>(new LayerListVM()).current;
     const containerRef = useRef<HTMLDivElement>();
     const layerListRendered = useRef<boolean>(false);
-    const view = context === MODE.SCENE_VIEW ? sceneView : mapView;
 
     const islayerListRendered = () => {
         return layerListRendered.current;
@@ -47,7 +45,7 @@ const LayerList: React.FC<LayerListProps> = ({
     };
 
     const renderLayerList = () => {
-        if (activeView === context) setLoading(true);
+        // if (activeView === view.type) setLoading(true);
         view.when(() => {
             layerListVM.set('view', view);
             if (!islayerListRendered()) {
@@ -62,7 +60,7 @@ const LayerList: React.FC<LayerListProps> = ({
                 });
                 layerList.when(() => {
                     layerList.set('label', strings.title);
-                    if (activeView === context) setLoading(false);
+                    //if (activeView === view.type) setLoading(false);
                 });
                 layerList.on('trigger-action', handleTriggerAction);
                 layerListRendered.current = true;
@@ -152,7 +150,7 @@ const LayerList: React.FC<LayerListProps> = ({
 
         if (layerRemove) {
             layerList.when(() => {
-                deferredRenderActionLayerRemove(item, layerList);
+                //deferredRenderActionLayerRemove(item, layerList);
             });
         }
 

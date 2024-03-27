@@ -11,18 +11,15 @@ import strings from './strings';
 import './data-catalog.scss';
 
 type DataCatalogProps = {
-    context?: string;
+    view: __esri.MapView | __esri.SceneView;
 };
 
 const DataCatalog: React.FC<DataCatalogProps> = ({
-    context = MODE.MAP_VIEW
+    view
 }: DataCatalogProps) => {
-    const { mapView, sceneView } = useAppContext();
     const containerRef = useRef<HTMLDivElement>();
     const dataCatalogRef = useRef<__esri.Expand>();
     const [catalogRendered, setCatalogRendered] = useState<boolean>(false);
-
-    const view = context === MODE.SCENE_VIEW ? sceneView : mapView;
 
     const isDataCatalogRendered = () => {
         return catalogRendered;
@@ -74,10 +71,10 @@ const DataCatalog: React.FC<DataCatalogProps> = ({
                 createPortal(
                     <div className='data-catalog-content'>
                         <LayerList
-                            context={context}
+                            view={view}
                             onLayerListClosed={closeDataCatalog}
                         />
-                        <BaseMapSelector context={context} />
+                        <BaseMapSelector view={view} />
                     </div>,
                     (dataCatalogRef as any).current.content as HTMLElement
                 )}

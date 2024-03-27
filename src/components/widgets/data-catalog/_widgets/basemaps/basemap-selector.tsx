@@ -1,6 +1,5 @@
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { createPortal } from 'react-dom';
-import { useAppContext } from '@src/contexts/app-context-provider';
 import Portal from '@arcgis/core/portal/Portal';
 import BasemapGalleryVM from '@arcgis/core/widgets/BasemapGallery/BasemapGalleryViewModel';
 import PortalBasemapsSource from '@arcgis/core/widgets/BasemapGallery/support/PortalBasemapsSource';
@@ -16,21 +15,17 @@ import { getConfig } from '@src/config/config';
 import strings from './strings';
 import './basemap-selector.scss';
 
-type BasemapSelectorProps = { context?: string };
+type BasemapSelectorProps = { view: __esri.MapView | __esri.SceneView };
 
 const BaseMapSelector: React.FC<BasemapSelectorProps> = ({
-    context = MODE.MAP_VIEW
+    view
 }: BasemapSelectorProps) => {
-    const { mapView, sceneView } = useAppContext();
     const [basemaps, setBasemaps] = useState<any[]>([]);
     const basemapGalleryVM = useRef(new BasemapGalleryVM()).current;
-
-    const view = context === MODE.SCENE_VIEW ? sceneView : mapView;
-
     const fetchBasemaps = useCallback(async () => {
         const config = getConfig(ENV.AGOL);
         const groupIdentifier =
-            context === MODE.SCENE_VIEW
+            view.type === MODE.SCENE_VIEW
                 ? config.portalInfo.basemapGroup3d
                 : config.portalInfo.basemapGroup2d;
 
@@ -95,10 +90,10 @@ const BaseMapSelector: React.FC<BasemapSelectorProps> = ({
                         focusTrapDisabled={true}
                         triggerDisabled={false}
                         placement='right'
-                        referenceElement={`selected-basemap-${context}`}
+                        referenceElement={`selected-basemap-${view.type}`}
                     >
                         <BasemapList
-                            context={context}
+                            view={view}
                             items={basemaps}
                             onBasemapChangeRequested={
                                 handleBasemapChangeRequested
@@ -110,11 +105,11 @@ const BaseMapSelector: React.FC<BasemapSelectorProps> = ({
 
             <div className='basemap-layer-list-heading'>{strings.title}</div>
             <div
-                id={`selected-basemap-${context}`}
+                id={`selected-basemap-${view.type}`}
                 className='selected-basemap'
             >
                 <BasemapItem
-                    context={context}
+                    view={view}
                     item={basemaps.filter((bmap) => bmap.selected)[0]}
                 />
             </div>

@@ -12,13 +12,13 @@ import strings from './strings';
 import './basemap-list.scss';
 
 type BasemapListProps = {
-    context?: string;
+    view: __esri.MapView | __esri.SceneView;
     items: __esri.Basemap[];
     onBasemapChangeRequested: (bmap: __esri.Basemap) => void;
 };
 
 const BasemapList: React.FC<BasemapListProps> = ({
-    context = MODE.MAP_VIEW,
+    view,
     items,
     onBasemapChangeRequested
 }: BasemapListProps) => {
@@ -35,7 +35,7 @@ const BasemapList: React.FC<BasemapListProps> = ({
                 className='basemap-list-item'
                 expanded={true}
                 heading={
-                    context === MODE.MAP_VIEW
+                    view.type === MODE.MAP_VIEW
                         ? strings.titleNSWBasemaps
                         : strings.titleESRI3DBasemaps
                 }
@@ -44,6 +44,7 @@ const BasemapList: React.FC<BasemapListProps> = ({
                     <BasemapItem
                         item={item}
                         key={String(index)}
+                        view={view}
                         onBasemapItemClicked={handleBasemapChangeRequest}
                     ></BasemapItem>
                 ))}
@@ -53,7 +54,7 @@ const BasemapList: React.FC<BasemapListProps> = ({
                     disabled: true
                 })}
                 heading={
-                    context === MODE.MAP_VIEW
+                    view.type === MODE.MAP_VIEW
                         ? strings.titleESRI3DBasemaps
                         : strings.titleNSWBasemaps
                 }

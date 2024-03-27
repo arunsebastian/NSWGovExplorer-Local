@@ -1,5 +1,6 @@
 import React, { useEffect, useLayoutEffect, useRef } from 'react';
-import MapView from '../components/map-view/map-view';
+import MapView from '../components/map-view/2d/map-view';
+import SceneView from '../components/map-view/3d/scene-view';
 import Loader from '../components/loader/loader';
 
 import { useAppContext } from '@src/contexts/app-context-provider';
@@ -14,6 +15,8 @@ const App: React.FC = () => {
     useEffect(() => {
         const appViewNodes = Array.from(
             document.querySelectorAll('.map-view-container')
+        ).concat(
+            Array.from(document.querySelectorAll('.scene-view-container'))
         );
         if (appViewNodes.length === 1) {
             if (!mapView && sceneView) {
@@ -29,8 +32,8 @@ const App: React.FC = () => {
     return (
         <div className='app-content'>
             <div ref={appRef} className='app-view'>
-                <MapView type={MODE.MAP_VIEW}></MapView>
-                {/* <MapView type={MODE.SCENE_VIEW}></MapView> */}
+                <MapView></MapView>
+                <SceneView></SceneView>
             </div>
             <Loader />
         </div>
