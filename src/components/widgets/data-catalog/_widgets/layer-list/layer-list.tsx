@@ -3,7 +3,6 @@ import { useAppContext } from '@src/contexts/app-context-provider';
 
 import { MODE } from '@src/utils/constants';
 import ESRILayerList from '@arcgis/core/widgets/LayerList';
-import LayerListVM from '@arcgis/core/widgets/LayerList/LayerListViewModel';
 import Slider from '@arcgis/core/widgets/Slider';
 import * as reactiveUtils from '@arcgis/core/core/reactiveUtils';
 import { CalciteLabel, CalciteButton } from '@esri/calcite-components-react';
@@ -26,46 +25,27 @@ const LayerList: React.FC<LayerListProps> = ({
     context = MODE.MAP_VIEW,
     onLayerListClosed
 }: LayerListProps) => {
-    const { activeView, mapView, sceneView, setLoading } = useAppContext();
-    const layerListVM = useRef<LayerListVM>(new LayerListVM()).current;
+    const { mapView, sceneView } = useAppContext();
     const containerRef = useRef<HTMLDivElement>();
-    const layerListRendered = useRef<boolean>(false);
+    const layerListRef = useRef<__esri.LayerList>();
     const view = context === MODE.SCENE_VIEW ? sceneView : mapView;
 
-    const islayerListRendered = () => {
-        return layerListRendered.current;
-    };
-
-    const purgeContainer = () => {
-        const children: Array<HTMLElement> = Array.prototype.slice.call(
-            containerRef.current.childNodes
-        );
-        children.forEach((child: HTMLElement) => {
-            containerRef.current.removeChild(child);
-        });
-        containerRef.current.innerHTML = '';
-    };
-
     const renderLayerList = () => {
-        if (activeView === context) setLoading(true);
         view.when(() => {
-            layerListVM.set('view', view);
-            if (!islayerListRendered()) {
-                const layerList = new ESRILayerList({
-                    viewModel: layerListVM,
+            if (!layerListRef.current) {
+                layerListRef.current = new ESRILayerList({
+                    view: view,
                     listItemCreatedFunction: (event: any) => {
-                        defineLayerItemActions(event, layerList);
+                        defineLayerItemActions(event, layerListRef.current);
                     },
                     dragEnabled: true,
                     collapsed: false,
                     container: containerRef.current
                 });
-                layerList.when(() => {
-                    layerList.set('label', strings.title);
-                    if (activeView === context) setLoading(false);
+                layerListRef.current.when(() => {
+                    layerListRef.current.set('label', strings.title);
                 });
-                layerList.on('trigger-action', handleTriggerAction);
-                layerListRendered.current = true;
+                layerListRef.current.on('trigger-action', handleTriggerAction);
             }
         });
     };
@@ -215,7 +195,6 @@ const LayerList: React.FC<LayerListProps> = ({
 
     useEffect(() => {
         if (view) {
-            purgeContainer();
             renderLayerList();
         }
     }, [view, containerRef.current]);

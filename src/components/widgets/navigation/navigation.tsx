@@ -35,7 +35,7 @@ enum PIN_STATUS {
 const Navigation: React.FC<NavigationProps> = ({
     context = MODE.MAP_VIEW
 }: NavigationProps) => {
-    const { mapView, sceneView } = useAppContext();
+    const { mapView, sceneView, setLoading } = useAppContext();
     const navRef = useRef<HTMLCalciteButtonElement>();
     const toolsDisplayTimerRef = useRef<any>();
     const popOverRef = useRef<HTMLCalcitePopoverElement>();
@@ -133,10 +133,12 @@ const Navigation: React.FC<NavigationProps> = ({
         }
     };
 
-    const onViewSwitch = (activeView: string) => {
+    const onViewSwitch = async (activeView: string) => {
+        setLoading(true);
         const source = activeView === MODE.MAP_VIEW ? sceneView : mapView;
         const target = activeView === MODE.MAP_VIEW ? mapView : sceneView;
-        syncMaps(source, target);
+        await syncMaps(source, target);
+        setLoading(false);
     };
 
     useEffect(() => {

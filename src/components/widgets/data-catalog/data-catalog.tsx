@@ -23,30 +23,22 @@ const DataCatalog: React.FC<DataCatalogProps> = ({
     const [catalogRendered, setCatalogRendered] = useState<boolean>(false);
     const view = context === MODE.SCENE_VIEW ? sceneView : mapView;
 
-    const purgeContainer = () => {
-        const children: Array<HTMLElement> = Array.prototype.slice.call(
-            containerRef.current.childNodes
-        );
-        children.forEach((child: HTMLElement) => {
-            containerRef.current.removeChild(child);
-        });
-        containerRef.current.innerHTML = '';
-    };
-
     const renderDataCatalog = () => {
-        const contentNode = document.createElement('div');
-        contentNode.setAttribute('class', 'data-catalog-wrapper');
+        if (!(dataCatalogRef as any).current) {
+            const contentNode = document.createElement('div');
+            contentNode.setAttribute('class', 'data-catalog-wrapper');
 
-        (dataCatalogRef as any).current = new Expand({
-            expandIcon: 'layers',
-            collapseIcon: 'layers',
-            content: contentNode,
-            label: strings.title,
-            expandTooltip: strings.title,
-            collapseTooltip: strings.title,
-            container: containerRef.current
-        });
-        setCatalogRendered(true);
+            (dataCatalogRef as any).current = new Expand({
+                expandIcon: 'layers',
+                collapseIcon: 'layers',
+                content: contentNode,
+                label: strings.title,
+                expandTooltip: strings.title,
+                collapseTooltip: strings.title,
+                container: containerRef.current
+            });
+            setCatalogRendered(true);
+        }
     };
 
     const closeDataCatalog = () => {
@@ -55,7 +47,6 @@ const DataCatalog: React.FC<DataCatalogProps> = ({
 
     useEffect(() => {
         if (view && containerRef.current) {
-            purgeContainer();
             renderDataCatalog();
         }
     }, [view, containerRef.current]);

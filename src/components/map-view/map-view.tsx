@@ -34,6 +34,7 @@ const MapView: React.FC<MapViewProps> = ({
     const {
         activeView,
         loading,
+        setLoading,
         mapView,
         setMapView,
         sceneView,
@@ -48,6 +49,7 @@ const MapView: React.FC<MapViewProps> = ({
         const config = getConfig(ENV.AGOL).portalInfo;
         let layers = [];
         if (config) {
+            setLoading(true);
             const urlLayerParams: string = parseURL('layers');
             if (urlLayerParams?.length > 0 && type === MODE.MAP_VIEW) {
                 const layerIdentifiers = urlLayerParams.split(',');
@@ -91,8 +93,9 @@ const MapView: React.FC<MapViewProps> = ({
                     }
                 }
             });
+
             map.addMany(layers.filter((layer) => layer));
-            map.loadAll();
+            await map.loadAll();
 
             const view = new ViewType({
                 container: viewRef.current,
@@ -119,6 +122,7 @@ const MapView: React.FC<MapViewProps> = ({
             });
 
             SetViewFunc(view);
+            view.when(() => setLoading(false));
         }
     };
 

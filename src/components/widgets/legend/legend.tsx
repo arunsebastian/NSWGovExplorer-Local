@@ -17,33 +17,26 @@ const Legend: React.FC<LegendProps> = ({
 }: LegendProps) => {
     const { mapView, sceneView } = useAppContext();
     const containerRef = useRef<HTMLDivElement>();
+    const legendRef = useRef<__esri.Legend>();
     const view = context === MODE.SCENE_VIEW ? sceneView : mapView;
 
-    const purgeContainer = () => {
-        const children: Array<HTMLElement> = Array.prototype.slice.call(
-            containerRef.current.childNodes
-        );
-        children.forEach((child: HTMLElement) => {
-            containerRef.current.removeChild(child);
-        });
-        containerRef.current.innerHTML = '';
-    };
-
     const renderLegend = () => {
-        const legendNode = document.createElement('div');
-        legendNode.setAttribute('class', 'legend-container');
-        const legend = new ESRILegend({
-            view: view,
-            container: legendNode,
-            hideLayersNotInCurrentView: true
-        });
-        new Expand({
-            expandIcon: 'legend',
-            content: legend,
-            label: strings.legend,
-            expandTooltip: strings.legend,
-            container: containerRef.current
-        });
+        if (!legendRef.current) {
+            const legendNode = document.createElement('div');
+            legendNode.setAttribute('class', 'legend-container');
+            legendRef.current = new ESRILegend({
+                view: view,
+                container: legendNode,
+                hideLayersNotInCurrentView: true
+            });
+            new Expand({
+                expandIcon: 'legend',
+                content: legendRef.current,
+                label: strings.legend,
+                expandTooltip: strings.legend,
+                container: containerRef.current
+            });
+        }
     };
 
     const applyCustomStyles = () => {
@@ -62,7 +55,6 @@ const Legend: React.FC<LegendProps> = ({
 
     useEffect(() => {
         if (view) {
-            purgeContainer();
             renderLegend();
             window.setTimeout(() => {
                 applyCustomStyles();

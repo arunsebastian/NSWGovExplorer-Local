@@ -177,17 +177,17 @@ export const doAttributeQuery = (
     });
 };
 
-export const syncMaps = (
+export const syncMaps = async (
     source: __esri.MapView | __esri.SceneView,
     target: __esri.MapView | __esri.SceneView
 ) => {
     if (target) {
         target.ready
             ? target.goTo(source.viewpoint)
-            : reactiveUtils
+            : await reactiveUtils
                   .whenOnce(() => target.ready)
                   .then(async () => {
-                      target.goTo(source.viewpoint);
+                      await target.goTo(source.viewpoint);
                   });
     }
 };
