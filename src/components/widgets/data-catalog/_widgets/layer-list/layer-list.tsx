@@ -26,7 +26,7 @@ const LayerList: React.FC<LayerListProps> = ({
     context = MODE.MAP_VIEW,
     onLayerListClosed
 }: LayerListProps) => {
-    const { mapView, sceneView, setLoading } = useAppContext();
+    const { activeView, mapView, sceneView, setLoading } = useAppContext();
     const layerListVM = useRef<LayerListVM>(new LayerListVM()).current;
     const containerRef = useRef<HTMLDivElement>();
     const layerListRendered = useRef<boolean>(false);
@@ -47,7 +47,7 @@ const LayerList: React.FC<LayerListProps> = ({
     };
 
     const renderLayerList = () => {
-        setLoading(true);
+        if (activeView === context) setLoading(true);
         layerListVM.set('view', view);
         view.when(() => {
             if (!islayerListRendered()) {
@@ -62,7 +62,7 @@ const LayerList: React.FC<LayerListProps> = ({
                 });
                 layerList.when(() => {
                     layerList.set('label', strings.title);
-                    setLoading(false);
+                    if (activeView === context) setLoading(false);
                 });
                 layerList.on('trigger-action', handleTriggerAction);
                 layerListRendered.current = true;
